@@ -2,76 +2,109 @@
 import React, { useState } from "react";
 import Layout from "../components/Layout";
 
-const policyText = {
+// Structured content (JSX, not giant strings)
+const content = {
   "game-void": {
-    privacy: `
-Game Void Privacy Policy
-Last updated: ${new Date().toLocaleDateString()}
-
-Game Void is an arcade hub of classic games and puzzles.  
-We do not ask for personal details such as your name or email.
-
-• Data We Collect  
-  – Anonymous device identifiers (like Apple’s IDFA) for ads and analytics.  
-  – Basic gameplay and usage data (screens visited, taps, session length) to improve game balance and performance.
-
-• How We Use It  
-  – To deliver ads through Google AdMob and measure their performance.  
-  – To understand crashes and fix bugs.
-
-• Your Choices  
-  – You can reset or limit the advertising identifier in your device settings.  
-  – You can opt out of personalized ads where your platform supports it.
-
-We never sell personal information and only share data with trusted service providers needed to operate the game.
-`,
-    terms: `
-Game Void Terms of Service
-Last updated: ${new Date().toLocaleDateString()}
-
-By playing Game Void you agree to these simple terms:
-
-• You may use the game for personal entertainment only.  
-• Do not attempt to cheat, exploit bugs, or interfere with servers or ads.  
-• Virtual items or scores have no real-world value and may change at any time.  
-• The game is provided “as is,” without warranties. We are not responsible for lost progress or service interruptions.  
-• We may update the game or these terms from time to time; continued play means you accept the updates.
-`,
+    subtitle: "Arcade hub of classic & puzzle games",
+    privacy: (
+      <>
+        <p>
+          Game Void is an arcade hub of classic and puzzle-style games. We keep data
+          collection minimal and focused on operating the game and supporting ads.
+        </p>
+        <h4>Data We Collect</h4>
+        <ul>
+          <li>
+            <strong>Advertising ID</strong> (e.g., IDFA on iOS where allowed) for ad delivery and
+            measurement via Google AdMob.
+          </li>
+          <li>
+            <strong>Basic usage</strong> (screens viewed, taps, session length) to improve stability and
+            gameplay balance.
+          </li>
+        </ul>
+        <h4>How We Use It</h4>
+        <ul>
+          <li>Serve and measure ads (frequency capping, performance, fraud prevention).</li>
+          <li>Fix crashes and improve performance.</li>
+        </ul>
+        <h4>Your Choices</h4>
+        <ul>
+          <li>Manage tracking and ad preferences in your device settings.</li>
+          <li>Opt out of personalized ads where supported by the platform.</li>
+        </ul>
+        <p>
+          We don’t request your name or email inside the game and we don’t sell personal data.
+          Some processing is done by trusted providers to operate the app.
+        </p>
+      </>
+    ),
+    terms: (
+      <>
+        <p>
+          By playing Game Void, you agree to these straightforward terms.
+        </p>
+        <ul>
+          <li>Use the game for personal entertainment; don’t cheat or exploit bugs.</li>
+          <li>Don’t interfere with servers, ads, or third-party SDKs.</li>
+          <li>
+            <strong>Virtual items/scores</strong> have no real-world value and may be changed or removed.
+          </li>
+          <li>
+            The app is provided <em>“as is”</em>; we aren’t liable for lost progress or downtime.
+          </li>
+          <li>We may update features or these terms; continued use means you accept updates.</li>
+        </ul>
+      </>
+    ),
   },
-
   "social-void": {
-    privacy: `
-Social Void Privacy Policy
-Last updated: ${new Date().toLocaleDateString()}
-
-Social Void is a merge-based game focused on collecting and progressing.  
-We keep data collection minimal.
-
-• Data We Collect  
-  – Anonymous device identifiers (IDFA/AAID) for ads and analytics.  
-  – Gameplay statistics (levels, merges, achievements) so your progress can be saved.  
-
-• How We Use It  
-  – To show ads with Google AdMob and measure ad performance.  
-  – To improve stability and balance gameplay.
-
-• Your Choices  
-  – Manage ad-tracking preferences in your device settings.  
-  – Disable personalized ads where supported.
-
-We never sell personal data and store only what’s necessary to operate and improve the game.
-`,
-    terms: `
-Social Void Terms of Service
-Last updated: ${new Date().toLocaleDateString()}
-
-By using Social Void you agree to these terms:
-
-• Play for personal enjoyment; don’t cheat, hack, or abuse the service.  
-• Any virtual items or progress have no cash value and may be changed or removed.  
-• The app is provided “as is,” without warranties. We are not liable for lost progress or downtime.  
-• We may update these terms or the game itself at any time; continuing to play means you accept those updates.
-`,
+    subtitle: "Merge-based progression game",
+    privacy: (
+      <>
+        <p>
+          Social Void is a merge game focused on collecting, upgrading, and progressing. We
+          collect only what’s needed to run the game and support ads.
+        </p>
+        <h4>Data We Collect</h4>
+        <ul>
+          <li>
+            <strong>Advertising ID</strong> (IDFA/AAID) for ads and measurement (Google AdMob).
+          </li>
+          <li>
+            <strong>Gameplay stats</strong> (levels, merges, achievements) so progress can be saved or
+            balanced.
+          </li>
+        </ul>
+        <h4>How We Use It</h4>
+        <ul>
+          <li>Deliver ads and understand performance.</li>
+          <li>Keep the game stable and tune progression/rewards.</li>
+        </ul>
+        <h4>Your Choices</h4>
+        <ul>
+          <li>Control tracking/ads in device settings; opt out of personalized ads where supported.</li>
+        </ul>
+        <p>
+          We don’t sell personal data and only use trusted services to operate and improve the app.
+        </p>
+      </>
+    ),
+    terms: (
+      <>
+        <p>By using Social Void, you agree to:</p>
+        <ul>
+          <li>Play fairly — no cheating, hacking, or abuse.</li>
+          <li>
+            Understand that <strong>virtual items/progress</strong> have no cash value and may change.
+          </li>
+          <li>
+            Accept the app is provided <em>“as is”</em>; we’re not liable for lost progress or interruptions.
+          </li>
+          <li>We may update features or these terms; continued play means you accept updates.</li>
+        </ul>
+      </>
+    ),
   },
 };
 
@@ -85,16 +118,18 @@ export default function Policies() {
   return (
     <Layout>
       <div className="policies-grid">
-        {apps.map((app) => {
-          const isOpen = openId === app.id;
+        {apps.map(({ id, title }) => {
+          const isOpen = openId === id;
           return (
             <PolicyTile
-              key={app.id}
-              title={app.title}
+              key={id}
+              appId={id}
+              title={title}
+              subtitle={content[id].subtitle}
               isOpen={isOpen}
-              onToggle={() => setOpenId(isOpen ? null : app.id)}
-              privacy={policyText[app.id].privacy}
-              terms={policyText[app.id].terms}
+              onToggle={() => setOpenId(isOpen ? null : id)}
+              privacy={content[id].privacy}
+              terms={content[id].terms}
             />
           );
         })}
@@ -114,11 +149,12 @@ export default function Policies() {
   );
 }
 
-function PolicyTile({ title, isOpen, onToggle, privacy, terms }) {
+function PolicyTile({ appId, title, subtitle, isOpen, onToggle, privacy, terms }) {
   const [flipped, setFlipped] = useState(false);
 
   return (
     <section className="tile">
+      {/* Header */}
       <button
         className="tile-head"
         onClick={() => {
@@ -126,36 +162,49 @@ function PolicyTile({ title, isOpen, onToggle, privacy, terms }) {
           if (isOpen) setFlipped(false);
         }}
         aria-expanded={isOpen}
+        aria-controls={`${appId}-panel`}
       >
-        <span className="tile-title">{title}</span>
+        <div className="head-left">
+          <div className="dot" aria-hidden />
+          <div>
+            <div className="tile-title">{title}</div>
+            <div className="tile-sub small">{subtitle}</div>
+          </div>
+        </div>
         <span className="chev">{isOpen ? "▲" : "▼"}</span>
       </button>
 
-      {isOpen && (
-        <div className="tile-body">
-          <div
-            className={`flip ${flipped ? "isBack" : ""}`}
-            onClick={() => setFlipped((v) => !v)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) =>
-              (e.key === "Enter" || e.key === " ") && setFlipped((v) => !v)
-            }
-          >
-            <div className="flip-face">
-              <h3>Privacy Policy</h3>
-              <div className="small">{privacy}</div>
-              <div className="hint small">Click to view Terms →</div>
-            </div>
-            <div className="flip-face back">
-              <h3>Terms of Service</h3>
-              <div className="small">{terms}</div>
-              <div className="hint small">← Click to view Privacy</div>
+      {/* Body */}
+      <div id={`${appId}-panel`} className={`tile-body ${isOpen ? "open" : ""}`}>
+        {isOpen && (
+          <div className="flip-wrap">
+            <div
+              className={`flip ${flipped ? "isBack" : ""}`}
+              onClick={() => setFlipped((v) => !v)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setFlipped((v) => !v)}
+              aria-label={flipped ? "Show Privacy Policy" : "Show Terms of Service"}
+            >
+              {/* FRONT: Privacy */}
+              <div className="flip-face">
+                <h3 className="face-title">Privacy Policy</h3>
+                <div className="prose">{privacy}</div>
+                <div className="hint small">Click card to view Terms →</div>
+              </div>
+
+              {/* BACK: Terms */}
+              <div className="flip-face back">
+                <h3 className="face-title">Terms of Service</h3>
+                <div className="prose">{terms}</div>
+                <div className="hint small">← Click card to view Privacy</div>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
+      {/* Styles (scoped) */}
       <style jsx>{`
         .tile {
           border-radius: 16px;
@@ -165,40 +214,90 @@ function PolicyTile({ title, isOpen, onToggle, privacy, terms }) {
           backdrop-filter: blur(10px);
           box-shadow: 0 10px 30px rgba(7,7,12,0.15);
         }
+
         .tile-head {
           width: 100%;
           background: rgba(255,255,255,0.04);
           border: none;
           padding: 14px 16px;
           display: flex;
+          align-items: center;
           justify-content: space-between;
+          gap: 12px;
           cursor: pointer;
-          font-weight: 800;
+          font-weight: 700;
           letter-spacing: 0.2px;
           border-bottom: 1px solid rgba(255,255,255,0.12);
+          color: inherit;
+          text-align: left;
         }
         .tile-head:hover { background: rgba(124,58,237,0.15); }
-        .tile-body { padding: 16px; }
+
+        .head-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+        .dot {
+          width: 10px; height: 10px; border-radius: 50%;
+          background: radial-gradient(circle at 30% 30%, #7c3aed, #4c1d95);
+          box-shadow: 0 0 10px rgba(124,58,237,0.6);
+          flex-shrink: 0;
+        }
+        .tile-title { font-weight: 800; }
+        .tile-sub { opacity: 0.85; }
+
+        .chev { opacity: 0.9; font-size: 13px; }
+
+        .tile-body {
+          max-height: 0;
+          opacity: 0;
+          overflow: hidden;
+          transform: translateY(-4px);
+          transition: max-height 260ms ease, opacity 180ms ease, transform 180ms ease;
+        }
+        .tile-body.open {
+          max-height: 1200px;
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        /* Flip card */
+        .flip-wrap { padding: 14px; perspective: 1200px; }
         .flip {
           position: relative;
-          min-height: 260px;
+          width: 100%;
+          min-height: 300px;
           transform-style: preserve-3d;
           transition: transform 0.6s ease;
           cursor: pointer;
         }
         .flip.isBack { transform: rotateY(180deg); }
+
         .flip-face {
           position: absolute;
           inset: 0;
           border-radius: 12px;
           background: rgba(255,255,255,0.06);
           border: 1px solid rgba(255,255,255,0.15);
-          padding: 16px;
+          padding: 18px 16px;
           backface-visibility: hidden;
           overflow: auto;
+          display: grid;
+          gap: 12px;
         }
         .flip-face.back { transform: rotateY(180deg); }
-        .hint { margin-top: 10px; opacity: 0.7; text-align: right; }
+        .face-title { margin: 0; font-size: 18px; font-weight: 800; }
+
+        /* Nice readable typography inside cards */
+        .prose :global(p) { margin: 0; }
+        .prose :global(p + p) { margin-top: 8px; }
+        .prose :global(h4) { margin: 4px 0 4px; font-size: 14px; opacity: 0.95; }
+        .prose :global(ul) { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+        .prose :global(li) { line-height: 1.55; }
+        .prose { font-size: 13.5px; opacity: 0.95; line-height: 1.65; }
+
+        .hint { opacity: 0.7; text-align: right; }
+        @media (max-width: 900px) {
+          .flip-wrap { padding: 12px; }
+          .flip { min-height: 280px; }
+        }
       `}</style>
     </section>
   );
