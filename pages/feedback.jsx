@@ -109,6 +109,21 @@ export default function Feedback() {
     }
   }
 
+  // Inline style to force native select behavior and clickability
+  const selectFix = {
+    pointerEvents: "auto",
+    WebkitAppearance: "menulist",
+    MozAppearance: "menulist",
+    appearance: "menulist",
+    background: "white",
+    border: "1px solid rgba(0,0,0,0.2)",
+    borderRadius: 8,
+    padding: "10px 12px",
+    fontSize: 14,
+    lineHeight: 1.2,
+    width: "100%",
+  };
+
   return (
     <Layout>
       {/* Admin toggle */}
@@ -152,10 +167,12 @@ export default function Feedback() {
               />
 
               <label className="small">Feedback Topic</label>
+              {/* Use native select with enforced clickability */}
               <select
-                className="input"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
+                style={selectFix}
+                aria-label="Feedback Topic"
               >
                 {TOPICS.map((t) => (
                   <option key={t} value={t}>{t}</option>
