@@ -135,6 +135,42 @@ export default function Policies() {
         })}
       </div>
 
+      {/* ─────────────────────────────────────────────────────────────
+          Account Deletion Section (below both tiles)
+      ───────────────────────────────────────────────────────────── */}
+      <section className="delete-section" aria-labelledby="delete-title">
+        <h2 id="delete-title">Delete Your Account</h2>
+        <p>
+          If you want your account and related in-game data removed, contact me using one of the
+          methods listed on the <a href="/contact">Contact</a> page (email, Discord, or Instagram).
+        </p>
+
+        <h4>What to include</h4>
+        <ul>
+          <li>Your <strong>User ID</strong> (shown in-app).</li>
+        </ul>
+
+        <h4>Quick verification</h4>
+        <p>
+          To confirm ownership, I’ll ask a couple of short questions. As part of this check, I’ll
+          temporarily change one of your in-game stats and ask you to confirm the number you see.
+        </p>
+
+        <h4>What happens next</h4>
+        <ul>
+          <li>Once verified, I’ll delete your account and remove related entries from our database.</li>
+          <li>
+            Deletion is permanent and cannot be undone. If you return later, you’ll start fresh with a
+            new account.
+          </li>
+        </ul>
+
+        <p className="small-hint">
+          Tip: If you can’t access your User ID, let me know which game you last played and any details
+          that help me find your account faster.
+        </p>
+      </section>
+
       <style jsx>{`
         .policies-grid {
           display: grid;
@@ -143,6 +179,45 @@ export default function Policies() {
         }
         @media (min-width: 900px) {
           .policies-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* Account Deletion styles */
+        .delete-section {
+          margin-top: 28px;
+          padding: 18px 16px;
+          border-radius: 16px;
+          border: 1px solid rgba(255,255,255,0.18);
+          background: rgba(10,10,22,0.28);
+          backdrop-filter: blur(10px);
+          box-shadow: 0 10px 30px rgba(7,7,12,0.15);
+        }
+        .delete-section h2 {
+          margin: 0 0 10px 0;
+          font-size: 20px;
+          font-weight: 800;
+          letter-spacing: 0.2px;
+        }
+        .delete-section h4 {
+          margin: 14px 0 8px;
+          font-size: 14px;
+          opacity: 0.95;
+        }
+        .delete-section p {
+          margin: 0;
+          line-height: 1.65;
+          opacity: 0.95;
+        }
+        .delete-section p + p { margin-top: 8px; }
+        .delete-section ul {
+          margin: 0;
+          padding-left: 18px;
+          display: grid;
+          gap: 6px;
+        }
+        .small-hint {
+          margin-top: 10px;
+          opacity: 0.75;
+          font-size: 13px;
         }
       `}</style>
     </Layout>
