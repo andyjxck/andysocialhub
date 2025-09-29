@@ -1,5 +1,5 @@
 // pages/feedback.jsx
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Layout from "../components/Layout";
 import { supabase } from "../lib/supabaseClient";
 
@@ -14,6 +14,161 @@ const TOPICS = [
   "Network",
   "Other",
 ];
+
+/**
+ * CustomSelect: a bulletproof dropdown that doesn't rely on <select>.
+ * - Click to open/close
+ * - Arrow keys / Enter / Escape support
+ * - High z-index and no blur so it can't be blocked
+ * - Fully controlled value via props
+ */
+function CustomSelect({ label, value, onChange, options, disabled }) {
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(
+    Math.max(0, options.findIndex((o) => o === value))
+  );
+  const btnRef = useRef(null);
+  const listRef = useRef(null);
+
+  const close = useCallback(() => {
+    setOpen(false);
+    // return focus to button
+    requestAnimationFrame(() => btnRef.current?.focus?.());
+  }, []);
+
+  const handleKeyDown = (e) => {
+    if (!open) {
+      if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setOpen(true);
+        setActiveIndex(Math.max(0, options.findIndex((o) => o === value)));
+      }
+      return;
+    }
+    if (e.key === "Escape") {
+      e.preventDefault();
+      close();
+      return;
+    }
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIndex((i) => (i + 1) % options.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIndex((i) => (i - 1 + options.length) % options.length);
+    } else if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      const choice = options[activeIndex];
+      if (choice) onChange(choice);
+      close();
+    }
+  };
+
+  // close on outside click
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e) => {
+      if (
+        !btnRef.current?.contains(e.target) &&
+        !listRef.current?.contains(e.target)
+      ) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onDoc, true);
+    document.addEventListener("touchstart", onDoc, true);
+    return () => {
+      document.removeEventListener("mousedown", onDoc, true);
+      document.removeEventListener("touchstart", onDoc, true);
+    };
+  }, [open]);
+
+  return (
+    <div style={{ position: "relative" }}>
+      {label ? (
+        <label className="small" style={{ display: "block", marginBottom: 6 }}>
+          {label}
+        </label>
+      ) : null}
+      <button
+        ref={btnRef}
+        type="button"
+        className="input"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => !disabled && setOpen((v) => !v)}
+        onKeyDown={handleKeyDown}
+        disabled={disabled}
+        style={{
+          textAlign: "left",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 8,
+          cursor: disabled ? "not-allowed" : "pointer",
+          position: "relative",
+          zIndex: 20, // above surroundings
+        }}
+      >
+        <span>{value}</span>
+        <span aria-hidden style={{ opacity: 0.8 }}>▾</span>
+      </button>
+
+      {open && (
+        <div
+          ref={listRef}
+          role="listbox"
+          tabIndex={-1}
+          className="card"
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            right: 0,
+            marginTop: 6,
+            zIndex: 9999, // sit on top of any blur/sticky bars
+            backdropFilter: "none",
+            WebkitBackdropFilter: "none",
+            maxHeight: 280,
+            overflowY: "auto",
+            padding: 6,
+          }}
+          onKeyDown={handleKeyDown}
+        >
+          {options.map((opt, i) => {
+            const isActive = i === activeIndex;
+            const isSelected = opt === value;
+            return (
+              <div
+                key={opt}
+                role="option"
+                aria-selected={isSelected}
+                onMouseEnter={() => setActiveIndex(i)}
+                onClick={() => {
+                  onChange(opt);
+                  close();
+                }}
+                className="post-link"
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "10px 12px",
+                  background: isActive ? "rgba(124,58,237,0.22)" : "rgba(10, 10, 22, 0.24)",
+                  border: "1px solid rgba(255,255,255,0.18)",
+                }}
+              >
+                <span>{opt}</span>
+                {isSelected ? <span className="small" style={{ opacity: 0.85 }}>✓</span> : null}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Feedback() {
   const [rows, setRows] = useState([]);
@@ -121,9 +276,17 @@ export default function Feedback() {
         </button>
       </div>
 
-      {/* Gate + form (NO BLUR CARD) */}
+      {/* Gate + form (no blur issues on this card) */}
       {showAdmin && (
-        <div className="card admin-panel no-blur">
+        <div
+          className="card admin-panel"
+          style={{
+            backdropFilter: "none",
+            WebkitBackdropFilter: "none",
+            position: "relative",
+            zIndex: 100, // keep the form above sticky bars
+          }}
+        >
           {!authed ? (
             <form onSubmit={tryAuth} className="admin-row" style={{ gap: 8 }}>
               <span className="badge">Report a Bug</span>
@@ -138,7 +301,7 @@ export default function Feedback() {
               <button className="btn" type="submit">Unlock</button>
             </form>
           ) : (
-            <form onSubmit={submitRow} className="admin-panel" style={{ display: "grid", gap: 12, position: "relative", zIndex: 5 }}>
+            <form onSubmit={submitRow} className="admin-panel" style={{ display: "grid", gap: 12 }}>
               <div className="badge">New Bug Report</div>
 
               <label className="small" htmlFor="userId">User ID</label>
@@ -151,18 +314,13 @@ export default function Feedback() {
                 className="input"
               />
 
-              <label className="small" htmlFor="topic">Feedback Topic</label>
-              <select
-                id="topic"
-                className="native-select"
+              {/* Custom dropdown instead of <select> */}
+              <CustomSelect
+                label="Feedback Topic"
                 value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-                aria-label="Feedback Topic"
-              >
-                {TOPICS.map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </select>
+                onChange={setTopic}
+                options={TOPICS}
+              />
 
               <label className="small">Platform</label>
               <div style={{ display: "flex", gap: 12 }}>
