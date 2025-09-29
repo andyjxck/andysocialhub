@@ -170,6 +170,41 @@ a:hover { text-decoration: underline; }
 }
 .admin-row { display: flex; gap: 10px; flex-wrap: wrap; }
 .admin-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+/* Fix: native selects often break when inside blur/transparent containers */
+.card.no-blur {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(10, 10, 22, 0.30) !important; /* keep your look */
+}
+
+/* Make the select truly native and clickable above any overlays */
+.native-select {
+  -webkit-appearance: menulist !important;
+  -moz-appearance: menulist !important;
+  appearance: menulist !important;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 10;              /* lift it over glass layers */
+  width: 100%;
+  color: #fff;
+  background: rgba(10,10,22,0.35);
+  border: 1px solid rgba(255,255,255,0.20);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.native-select:focus {
+  border-color: rgba(255,255,255,0.35);
+  background: rgba(10,10,22,0.45);
+}
+
+/* Ensure the admin panel itself gets clicks even if any global overlay exists */
+.admin-panel {
+  position: relative;
+  z-index: 5;
+}
 
 .badge {
   display: inline-block;
@@ -188,3 +223,5 @@ a:hover { text-decoration: underline; }
   .page { grid-template-columns: 1fr; }
   .sidebar { position: static; }
 }
+
+
