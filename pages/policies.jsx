@@ -2,107 +2,185 @@
 import React, { useState } from "react";
 import Layout from "../components/Layout";
 
-// Structured content (JSX, not giant strings)
+// -------------------- POLICY CONTENT --------------------
 const content = {
   "game-void": {
     subtitle: "Arcade hub of classic & puzzle games",
     privacy: (
       <>
+        <p><strong>Last Updated: 29 September 2025</strong></p>
         <p>
-          Game Void is an arcade hub of classic and puzzle-style games. We keep data
-          collection minimal and focused on operating the game and supporting ads.
+          Game Void is owned and operated by <strong>Andrew Blewett</strong>. We collect only the
+          information needed to operate the app, improve gameplay, and support advertising.
         </p>
-        <h4>Data We Collect</h4>
+
+        <h4>Information We Collect</h4>
         <ul>
-          <li>
-            <strong>Advertising ID</strong> (e.g., IDFA on iOS where allowed) for ad delivery and
-            measurement via Google AdMob.
-          </li>
-          <li>
-            <strong>Basic usage</strong> (screens viewed, taps, session length) to improve stability and
-            gameplay balance.
-          </li>
+          <li><strong>Advertising Identifiers</strong> (IDFA/AAID) when allowed by your device settings.</li>
+          <li><strong>Usage Data</strong> such as screens viewed, taps, session length, and crash reports.</li>
+          <li><strong>User-Generated Content</strong> you share (e.g., usernames, chat messages). Don’t post personal info.</li>
         </ul>
-        <h4>How We Use It</h4>
+
+        <h4>How We Use Data</h4>
         <ul>
-          <li>Serve and measure ads (frequency capping, performance, fraud prevention).</li>
-          <li>Fix crashes and improve performance.</li>
+          <li>Deliver, measure, and improve ads (via Google AdMob).</li>
+          <li>Monitor stability, fix crashes, and balance gameplay.</li>
+          <li>Moderate chat to keep the community safe.</li>
         </ul>
+
+        <h4>Data Sharing</h4>
+        <p>
+          We share limited data only with trusted providers such as Google AdMob. These providers are bound by their
+          own privacy and security obligations and may not use your data for unrelated purposes.
+        </p>
+
+        <h4>Retention & Security</h4>
+        <p>
+          Data is retained only as long as necessary for the purposes above, then aggregated or deleted. We use
+          industry-standard safeguards, but no system is perfectly secure.
+        </p>
+
         <h4>Your Choices</h4>
         <ul>
-          <li>Manage tracking and ad preferences in your device settings.</li>
-          <li>Opt out of personalized ads where supported by the platform.</li>
+          <li>Control ad tracking in your device settings (iOS/Android).</li>
+          <li>Request deletion of user content or account data: <a href="mailto:andyblewett9@gmail.com">andyblewett9@gmail.com</a>.</li>
         </ul>
-        <p>
-          We don’t request your name or email inside the game and we don’t sell personal data.
-          Some processing is done by trusted providers to operate the app.
-        </p>
+
+        <h4>Children</h4>
+        <p>Game Void is for users 13+ and is not directed to children under 13.</p>
+
+        <h4>International Users</h4>
+        <p>Data is processed in the United Kingdom and where our providers operate.</p>
+
+        <h4>Changes</h4>
+        <p>We may update this policy; material changes will be highlighted in-app or on our site.</p>
+
+        <h4>Contact</h4>
+        <p>Questions or requests: <a href="mailto:andyblewett9@gmail.com">andyblewett9@gmail.com</a>.</p>
       </>
     ),
     terms: (
       <>
+        <p><strong>Last Updated: 29 September 2025</strong></p>
         <p>
-          By playing Game Void, you agree to these straightforward terms.
+          These Terms of Service form a legal agreement between you and <strong>Andrew Blewett</strong>.
+          By installing or using Game Void, you agree to these Terms and the Privacy Policy.
         </p>
+
+        <h4>Eligibility</h4>
+        <p>You must be at least 13 years old. Under-18s need parental/guardian consent.</p>
+
+        <h4>License & Ownership</h4>
+        <p>
+          We grant a personal, non-exclusive, non-transferable license to use the app for entertainment. All rights
+          in the app and content remain with Andrew Blewett.
+        </p>
+
+        <h4>User Content & Conduct</h4>
         <ul>
-          <li>Use the game for personal entertainment; don’t cheat or exploit bugs.</li>
-          <li>Don’t interfere with servers, ads, or third-party SDKs.</li>
-          <li>
-            <strong>Virtual items/scores</strong> have no real-world value and may be changed or removed.
-          </li>
-          <li>
-            The app is provided <em>“as is”</em>; we aren’t liable for lost progress or downtime.
-          </li>
-          <li>We may update features or these terms; continued use means you accept updates.</li>
+          <li>Don’t post unlawful, abusive, defamatory, or offensive content (usernames, chat, etc.).</li>
+          <li>We may remove content or suspend accounts at our discretion to protect the community.</li>
         </ul>
+
+        <h4>Monetization</h4>
+        <p>No in-app purchases. Virtual items/scores have no real-world value and may change or be removed.</p>
+
+        <h4>Prohibited Activities</h4>
+        <ul>
+          <li>No cheating, hacking, or exploiting bugs.</li>
+          <li>No disrupting servers or interfering with ads/SDKs.</li>
+          <li>No reverse engineering or unauthorized distribution.</li>
+        </ul>
+
+        <h4>Disclaimers & Limitation of Liability</h4>
+        <p>
+          The app is provided “as is” and “as available.” To the fullest extent permitted by law, Andrew Blewett
+          is not liable for indirect, incidental, or consequential damages (including lost data or profits).
+        </p>
+
+        <h4>Termination</h4>
+        <p>We may suspend or terminate access at any time, including for rule violations.</p>
+
+        <h4>Governing Law</h4>
+        <p>These Terms are governed by the laws of England & Wales, with exclusive jurisdiction in its courts.</p>
       </>
     ),
   },
+
   "social-void": {
     subtitle: "Merge-based progression game",
     privacy: (
       <>
+        <p><strong>Last Updated: 29 September 2025</strong></p>
         <p>
-          Social Void is a merge game focused on collecting, upgrading, and progressing. We
-          collect only what’s needed to run the game and support ads.
+          Social Void is owned and operated by <strong>Andrew Blewett</strong>. We collect only what’s necessary
+          to run the game and support advertising.
         </p>
-        <h4>Data We Collect</h4>
+
+        <h4>Information We Collect</h4>
         <ul>
-          <li>
-            <strong>Advertising ID</strong> (IDFA/AAID) for ads and measurement (Google AdMob).
-          </li>
-          <li>
-            <strong>Gameplay stats</strong> (levels, merges, achievements) so progress can be saved or
-            balanced.
-          </li>
+          <li><strong>Advertising Identifiers</strong> (IDFA/AAID) for ads and measurement.</li>
+          <li><strong>Gameplay Data</strong> like levels, merges, achievements, crash logs, and usage stats.</li>
+          <li><strong>User-Generated Content</strong> (usernames, chat). Don’t share personal info in chat.</li>
         </ul>
-        <h4>How We Use It</h4>
+
+        <h4>How We Use Data</h4>
         <ul>
-          <li>Deliver ads and understand performance.</li>
-          <li>Keep the game stable and tune progression/rewards.</li>
+          <li>Serve/measure ads and analyze performance.</li>
+          <li>Maintain stability and tune progression/rewards.</li>
+          <li>Moderate chat to keep the community safe.</li>
         </ul>
+
+        <h4>Sharing & Retention</h4>
+        <p>Shared only with trusted providers (e.g., Google AdMob). Retained only as long as needed.</p>
+
         <h4>Your Choices</h4>
         <ul>
-          <li>Control tracking/ads in device settings; opt out of personalized ads where supported.</li>
+          <li>Manage ad preferences/reset your advertising ID in device settings.</li>
+          <li>Request data deletion: <a href="mailto:andyblewett9@gmail.com">andyblewett9@gmail.com</a>.</li>
         </ul>
-        <p>
-          We don’t sell personal data and only use trusted services to operate and improve the app.
-        </p>
+
+        <h4>Children</h4>
+        <p>Social Void is intended for players 13+ and not for children under 13.</p>
+
+        <h4>International Users & Changes</h4>
+        <p>Data is processed in the UK. We may update this policy; continued use means acceptance.</p>
       </>
     ),
     terms: (
       <>
-        <p>By using Social Void, you agree to:</p>
+        <p><strong>Last Updated: 29 September 2025</strong></p>
+        <p>
+          These Terms of Service are a legal agreement between you and <strong>Andrew Blewett</strong> for your
+          use of Social Void.
+        </p>
+
+        <h4>Eligibility</h4>
+        <p>You must be 13+; under-18s need parental/guardian consent.</p>
+
+        <h4>License & Ownership</h4>
+        <p>Personal, non-exclusive, non-transferable license for entertainment only. All rights reserved.</p>
+
+        <h4>User Content & Conduct</h4>
         <ul>
-          <li>Play fairly — no cheating, hacking, or abuse.</li>
-          <li>
-            Understand that <strong>virtual items/progress</strong> have no cash value and may change.
-          </li>
-          <li>
-            Accept the app is provided <em>“as is”</em>; we’re not liable for lost progress or interruptions.
-          </li>
-          <li>We may update features or these terms; continued play means you accept updates.</li>
+          <li>No illegal, abusive, defamatory, or offensive usernames or chat.</li>
+          <li>We may remove content or suspend accounts at our discretion.</li>
         </ul>
+
+        <h4>Monetization</h4>
+        <p>No in-app purchases. Virtual items/progress have no cash value and may change or be removed.</p>
+
+        <h4>Prohibited Activities</h4>
+        <ul>
+          <li>No cheating, hacking, exploiting bugs, or disrupting servers.</li>
+          <li>No interference with ads/SDKs; no reverse engineering.</li>
+        </ul>
+
+        <h4>Disclaimer & Limitation of Liability</h4>
+        <p>Provided “as is.” To the fullest extent permitted by law, no liability for indirect or consequential losses.</p>
+
+        <h4>Termination & Governing Law</h4>
+        <p>We may suspend or terminate access at any time. Governed by England & Wales law; exclusive courts of England & Wales.</p>
       </>
     ),
   },
@@ -113,10 +191,83 @@ const apps = [
   { id: "social-void", title: "Social Void" },
 ];
 
+// -------------------- LINKS --------------------
+const LINKS = {
+  GAME_VOID_IOS: "https://apps.apple.com/gb/app/game-void/id6751643961",
+  SOCIAL_VOID_IOS: "https://apps.apple.com/gb/app/social-void/id6751636874",
+  TTT_SITE: "https://taptaptwo.co.uk",
+  TTT_LOGO: "https://ucarecdn.com/7bdd361d-c411-41ce-b066-c1d20f88e3a7/-/format/auto/",
+};
+
 export default function Policies() {
   const [openId, setOpenId] = useState(null);
+
   return (
     <Layout>
+      {/* DOWNLOAD CTA SECTION */}
+      <section className="downloads" aria-labelledby="downloads-title">
+        <h2 id="downloads-title" className="dl-title">Download the Games</h2>
+
+        <div className="dl-grid">
+          {/* Game Void */}
+          <article className="dl-card">
+            <h3 className="dl-name">Game Void</h3>
+            <div className="store-buttons">
+              <a
+                className="store-btn"
+                href={LINKS.GAME_VOID_IOS}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                 iOS — Get on App Store
+              </a>
+              <button className="store-btn disabled" type="button" disabled>
+                Android — Coming Soon
+              </button>
+            </div>
+          </article>
+
+          {/* Social Void */}
+          <article className="dl-card">
+            <h3 className="dl-name">Social Void</h3>
+            <div className="store-buttons">
+              <a
+                className="store-btn"
+                href={LINKS.SOCIAL_VOID_IOS}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                 iOS — Get on App Store
+              </a>
+              <button className="store-btn disabled" type="button" disabled>
+                Android — Coming Soon
+              </button>
+            </div>
+          </article>
+
+          {/* Tap Tap Two */}
+          <article className="dl-card">
+            <h3 className="dl-name">Tap Tap Two</h3>
+            <div className="store-buttons">
+              <a
+                className="store-btn"
+                href={LINKS.TTT_SITE}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={LINKS.TTT_LOGO}
+                  alt="Tap Tap Two logo"
+                  style={{ height: 28, width: "auto", marginRight: 8, borderRadius: 6 }}
+                />
+                Visit TapTapTwo.co.uk
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* POLICY CARDS */}
       <div className="policies-grid">
         {apps.map(({ id, title }) => {
           const isOpen = openId === id;
@@ -135,85 +286,64 @@ export default function Policies() {
         })}
       </div>
 
-      {/* ─────────────────────────────────────────────────────────────
-          Account Deletion Section (below both tiles)
-      ───────────────────────────────────────────────────────────── */}
+      {/* ACCOUNT DELETION */}
       <section className="delete-section" aria-labelledby="delete-title">
         <h2 id="delete-title">Delete Your Account</h2>
         <p>
-          If you want your account and related in-game data removed, contact me using one of the
-          methods listed on the <a href="/contact">Contact</a> page (email, Discord, or Instagram).
+          To delete your account and related data, email{" "}
+          <a href="mailto:andyblewett9@gmail.com">andyblewett9@gmail.com</a> or use the methods on the{" "}
+          <a href="/contact">Contact</a> page.
         </p>
-
-        <h4>What to include</h4>
+        <h4>What to Include</h4>
         <ul>
           <li>Your <strong>User ID</strong> (shown in-app).</li>
         </ul>
-
-        <h4>Quick verification</h4>
-        <p>
-          To confirm ownership, I’ll ask a couple of short questions. As part of this check, I’ll
-          temporarily change one of your in-game stats and ask you to confirm the number you see.
-        </p>
-
-        <h4>What happens next</h4>
+        <h4>Verification</h4>
+        <p>We may ask quick questions or temporarily adjust an in-game stat to confirm ownership.</p>
+        <h4>After Deletion</h4>
         <ul>
-          <li>Once verified, I’ll delete your account and remove related entries from our database.</li>
-          <li>
-            Deletion is permanent and cannot be undone. If you return later, you’ll start fresh with a
-            new account.
-          </li>
+          <li>Your account/data will be removed permanently.</li>
+          <li>Deletion cannot be undone; returning players start fresh.</li>
         </ul>
       </section>
 
       <style jsx>{`
-        .policies-grid {
-          display: grid;
-          gap: 16px;
-          grid-template-columns: 1fr;
-        }
-        @media (min-width: 900px) {
-          .policies-grid { grid-template-columns: 1fr 1fr; }
-        }
-
-        /* Account Deletion styles */
-        .delete-section {
-          margin-top: 28px;
-          padding: 18px 16px;
+        /* Downloads */
+        .downloads { margin-bottom: 32px; }
+        .dl-title { font-size: 24px; font-weight: 800; margin-bottom: 20px; text-align: center; }
+        .dl-grid { display: grid; gap: 18px; grid-template-columns: 1fr; }
+        @media (min-width: 700px) { .dl-grid { grid-template-columns: repeat(3, 1fr); } }
+        .dl-card {
+          padding: 16px;
           border-radius: 16px;
+          background: rgba(10,10,22,0.30);
           border: 1px solid rgba(255,255,255,0.18);
-          background: rgba(10,10,22,0.28);
           backdrop-filter: blur(10px);
-          box-shadow: 0 10px 30px rgba(7,7,12,0.15);
+          text-align: center;
         }
-        .delete-section h2 {
-          margin: 0 0 10px 0;
-          font-size: 20px;
-          font-weight: 800;
-          letter-spacing: 0.2px;
+        .dl-name { margin: 0 0 8px 0; font-size: 18px; font-weight: 800; }
+        .store-buttons { display: grid; gap: 8px; }
+        .store-btn {
+          display: inline-flex; align-items: center; justify-content: center;
+          gap: 8px; padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.22);
+          background: rgba(124,58,237,0.9); color: #fff; text-decoration: none; font-weight: 600;
+          transition: background 0.15s ease;
         }
-        .delete-section h4 {
-          margin: 14px 0 8px;
-          font-size: 14px;
-          opacity: 0.95;
+        .store-btn:hover:not(.disabled) { background: rgba(124,58,237,1); }
+        .store-btn.disabled { background: rgba(255,255,255,0.12); cursor: not-allowed; }
+
+        /* Policies grid */
+        .policies-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+        @media (min-width: 900px) { .policies-grid { grid-template-columns: 1fr 1fr; } }
+
+        /* Delete */
+        .delete-section {
+          margin-top: 28px; padding: 18px 16px; border-radius: 16px;
+          border: 1px solid rgba(255,255,255,0.18); background: rgba(10,10,22,0.28);
+          backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(7,7,12,0.15);
         }
-        .delete-section p {
-          margin: 0;
-          line-height: 1.65;
-          opacity: 0.95;
-        }
-        .delete-section p + p { margin-top: 8px; }
-        .delete-section ul {
-          margin: 0;
-          padding-left: 18px;
-          display: grid;
-          gap: 6px;
-        }
-        .small-hint {
-          margin-top: 10px;
-          opacity: 0.75;
-          font-size: 13px;
-        }
+        .delete-section h2 { margin: 0 0 10px 0; font-size: 20px; font-weight: 800; }
+
       `}</style>
     </Layout>
   );
@@ -277,8 +407,7 @@ function PolicyTile({ appId, title, subtitle, isOpen, onToggle, privacy, terms }
       {/* Styles (scoped) */}
       <style jsx>{`
         .tile {
-          border-radius: 16px;
-          overflow: hidden;
+          border-radius: 16px; overflow: hidden;
           border: 1px solid rgba(255,255,255,0.18);
           background: rgba(10,10,22,0.28);
           backdrop-filter: blur(10px);
@@ -286,76 +415,32 @@ function PolicyTile({ appId, title, subtitle, isOpen, onToggle, privacy, terms }
         }
 
         .tile-head {
-          width: 100%;
-          background: rgba(255,255,255,0.04);
-          border: none;
-          padding: 14px 16px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 12px;
-          cursor: pointer;
-          font-weight: 700;
-          letter-spacing: 0.2px;
-          border-bottom: 1px solid rgba(255,255,255,0.12);
-          color: inherit;
-          text-align: left;
+          width: 100%; background: rgba(255,255,255,0.04); border: none;
+          padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+          cursor: pointer; font-weight: 700; letter-spacing: 0.2px; border-bottom: 1px solid rgba(255,255,255,0.12);
+          color: inherit; text-align: left;
         }
         .tile-head:hover { background: rgba(124,58,237,0.15); }
 
         .head-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
-        .dot {
-          width: 10px; height: 10px; border-radius: 50%;
-          background: radial-gradient(circle at 30% 30%, #7c3aed, #4c1d95);
-          box-shadow: 0 0 10px rgba(124,58,237,0.6);
-          flex-shrink: 0;
-        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #7c3aed, #4c1d95); box-shadow: 0 0 10px rgba(124,58,237,0.6); flex-shrink: 0; }
         .tile-title { font-weight: 800; }
         .tile-sub { opacity: 0.85; }
-
         .chev { opacity: 0.9; font-size: 13px; }
 
-        .tile-body {
-          max-height: 0;
-          opacity: 0;
-          overflow: hidden;
-          transform: translateY(-4px);
-          transition: max-height 260ms ease, opacity 180ms ease, transform 180ms ease;
-        }
-        .tile-body.open {
-          max-height: 1200px;
-          opacity: 1;
-          transform: translateY(0);
-        }
+        .tile-body { max-height: 0; opacity: 0; overflow: hidden; transform: translateY(-4px);
+          transition: max-height 260ms ease, opacity 180ms ease, transform 180ms ease; }
+        .tile-body.open { max-height: 1200px; opacity: 1; transform: translateY(0); }
 
-        /* Flip card */
         .flip-wrap { padding: 14px; perspective: 1200px; }
-        .flip {
-          position: relative;
-          width: 100%;
-          min-height: 300px;
-          transform-style: preserve-3d;
-          transition: transform 0.6s ease;
-          cursor: pointer;
-        }
+        .flip { position: relative; width: 100%; min-height: 300px; transform-style: preserve-3d; transition: transform 0.6s ease; cursor: pointer; }
         .flip.isBack { transform: rotateY(180deg); }
 
-        .flip-face {
-          position: absolute;
-          inset: 0;
-          border-radius: 12px;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.15);
-          padding: 18px 16px;
-          backface-visibility: hidden;
-          overflow: auto;
-          display: grid;
-          gap: 12px;
-        }
+        .flip-face { position: absolute; inset: 0; border-radius: 12px; background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.15); padding: 18px 16px; backface-visibility: hidden; overflow: auto; display: grid; gap: 12px; }
         .flip-face.back { transform: rotateY(180deg); }
         .face-title { margin: 0; font-size: 18px; font-weight: 800; }
 
-        /* Nice readable typography inside cards */
         .prose :global(p) { margin: 0; }
         .prose :global(p + p) { margin-top: 8px; }
         .prose :global(h4) { margin: 4px 0 4px; font-size: 14px; opacity: 0.95; }
