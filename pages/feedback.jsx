@@ -89,7 +89,6 @@ export default function Feedback() {
       alert(error.message || "Failed to submit");
       return;
     }
-    // reset form
     setUserId("");
     setTopic(TOPICS[0]);
     setFeedback("");
@@ -109,21 +108,6 @@ export default function Feedback() {
     }
   }
 
-  // Inline style to force native select behavior and clickability
-  const selectFix = {
-    pointerEvents: "auto",
-    WebkitAppearance: "menulist",
-    MozAppearance: "menulist",
-    appearance: "menulist",
-    background: "white",
-    border: "1px solid rgba(0,0,0,0.2)",
-    borderRadius: 8,
-    padding: "10px 12px",
-    fontSize: 14,
-    lineHeight: 1.2,
-    width: "100%",
-  };
-
   return (
     <Layout>
       {/* Admin toggle */}
@@ -137,9 +121,9 @@ export default function Feedback() {
         </button>
       </div>
 
-      {/* Gate + form */}
+      {/* Gate + form (NO BLUR CARD) */}
       {showAdmin && (
-        <div className="card admin-panel">
+        <div className="card admin-panel no-blur">
           {!authed ? (
             <form onSubmit={tryAuth} className="admin-row" style={{ gap: 8 }}>
               <span className="badge">Report a Bug</span>
@@ -154,11 +138,12 @@ export default function Feedback() {
               <button className="btn" type="submit">Unlock</button>
             </form>
           ) : (
-            <form onSubmit={submitRow} className="admin-panel" style={{ display: "grid", gap: 12 }}>
+            <form onSubmit={submitRow} className="admin-panel" style={{ display: "grid", gap: 12, position: "relative", zIndex: 5 }}>
               <div className="badge">New Bug Report</div>
 
-              <label className="small">User ID</label>
+              <label className="small" htmlFor="userId">User ID</label>
               <input
+                id="userId"
                 type="text"
                 placeholder="e.g. 12345"
                 value={userId}
@@ -166,12 +151,12 @@ export default function Feedback() {
                 className="input"
               />
 
-              <label className="small">Feedback Topic</label>
-              {/* Use native select with enforced clickability */}
+              <label className="small" htmlFor="topic">Feedback Topic</label>
               <select
+                id="topic"
+                className="native-select"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
-                style={selectFix}
                 aria-label="Feedback Topic"
               >
                 {TOPICS.map((t) => (
@@ -203,8 +188,9 @@ export default function Feedback() {
                 </label>
               </div>
 
-              <label className="small">Feedback</label>
+              <label className="small" htmlFor="feedback">Feedback</label>
               <textarea
+                id="feedback"
                 placeholder="Describe the issue, steps to reproduce, expected vs. actual behavior…"
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
@@ -294,7 +280,7 @@ export default function Feedback() {
                   {" · "}
                   {activeItem.user_id ? `User ${activeItem.user_id}` : "(no user id)"}
                 </div>
-                <div className="post-body" style={{ whiteSpace: "pre-wrap" }}>
+                <div className="post-body">
                   {activeItem.feedback}
                 </div>
               </>
