@@ -1,23 +1,37 @@
 // pages/feedback.jsx
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Layout from "../components/Layout";
 import { supabase } from "../lib/supabaseClient";
+
+const TOPICS = [
+  "Gameplay",
+  "Performance",
+  "Crash",
+  "Bug",
+  "Visual Bug",
+  "UI/UX",
+  "Audio",
+  "Network",
+  "Other",
+];
 
 export default function Feedback() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // admin state
+  // gate + admin
   const [showAdmin, setShowAdmin] = useState(false);
   const [pass, setPass] = useState("");
   const [authed, setAuthed] = useState(false);
 
-  // compose form
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+  // form fields
+  const [userId, setUserId] = useState("");
+  const [topic, setTopic] = useState(TOPICS[0]);
+  const [feedback, setFeedback] = useState("");
+  const [platform, setPlatform] = useState("Android");
   const [saving, setSaving] = useState(false);
 
-  // selected feedback
+  // selection
   const [activeId, setActiveId] = useState(null);
 
   async function loadRows() {
@@ -46,10 +60,7 @@ export default function Feedback() {
 
   function tryAuth(e) {
     e.preventDefault();
-    if (
-      pass.trim() &&
-      pass === process.env.NEXT_PUBLIC_FEEDBACK_PASSWORD
-    ) {
+    if (pass.trim() && pass === process.env.NEXT_PUBLIC_FEEDBACK_PASSWORD) {
       setAuthed(true);
     } else {
       alert("Wrong password.");
@@ -58,25 +69,34 @@ export default function Feedback() {
 
   async function submitRow(e) {
     e.preventDefault();
-    if (!title.trim() || !body.trim()) return;
+    if (!userId.trim() || !feedback.trim() || !topic.trim() || !platform.trim()) {
+      alert("Please complete all fields.");
+      return;
+    }
     setSaving(true);
     const { data, error } = await supabase
       .from("feedback")
       .insert({
-        title: title.trim(),
-        body: body.trim(),
+        user_id: userId.trim(),
+        topic: topic.trim(),
+        feedback: feedback.trim(),
+        platform: platform.trim(),
       })
       .select()
       .single();
     setSaving(false);
     if (error) {
-      alert(error.message || "Failed to publish");
+      alert(error.message || "Failed to submit");
       return;
     }
-    setTitle("");
-    setBody("");
+    // reset form
+    setUserId("");
+    setTopic(TOPICS[0]);
+    setFeedback("");
+    setPlatform("Android");
     await loadRows();
     if (data?.id) setActiveId(data.id);
+    alert("Thanks! Your report was submitted.");
   }
 
   async function deleteRow(id) {
@@ -102,47 +122,92 @@ export default function Feedback() {
         </button>
       </div>
 
-      {/* Admin panel */}
+      {/* Gate + form */}
       {showAdmin && (
         <div className="card admin-panel">
           {!authed ? (
-            <form onSubmit={tryAuth} className="admin-row">
-              <span className="badge">Submit Feedback</span>
+            <form onSubmit={tryAuth} className="admin-row" style={{ gap: 8 }}>
+              <span className="badge">Report a Bug</span>
               <input
                 type="password"
-                placeholder="Password"
+                placeholder="Enter feedback password"
                 value={pass}
                 onChange={(e) => setPass(e.target.value)}
                 className="input"
-                style={{ minWidth: 220 }}
+                style={{ minWidth: 240 }}
               />
               <button className="btn" type="submit">Unlock</button>
             </form>
           ) : (
-            <form onSubmit={submitRow} className="admin-panel">
-              <div className="badge">New Feedback</div>
+            <form onSubmit={submitRow} className="admin-panel" style={{ display: "grid", gap: 12 }}>
+              <div className="badge">New Bug Report</div>
+
+              <label className="small">User ID</label>
               <input
                 type="text"
-                placeholder="Title (optional but useful)"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                placeholder="e.g. 12345"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
                 className="input"
               />
+
+              <label className="small">Feedback Topic</label>
+              <select
+                className="input"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+              >
+                {TOPICS.map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+
+              <label className="small">Platform</label>
+              <div style={{ display: "flex", gap: 12 }}>
+                <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <input
+                    type="radio"
+                    name="platform"
+                    value="Android"
+                    checked={platform === "Android"}
+                    onChange={(e) => setPlatform(e.target.value)}
+                  />
+                  Android
+                </label>
+                <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <input
+                    type="radio"
+                    name="platform"
+                    value="iOS"
+                    checked={platform === "iOS"}
+                    onChange={(e) => setPlatform(e.target.value)}
+                  />
+                  iOS
+                </label>
+              </div>
+
+              <label className="small">Feedback</label>
               <textarea
-                placeholder="Write your feedback…"
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
+                placeholder="Describe the issue, steps to reproduce, expected vs. actual behavior…"
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
                 className="textarea"
                 rows={8}
               />
-              <div className="admin-actions">
+
+              <div className="admin-actions" style={{ display: "flex", gap: 8 }}>
                 <button className="btn" type="submit" disabled={saving}>
-                  {saving ? "Publishing…" : "Publish"}
+                  {saving ? "Submitting…" : "Submit"}
                 </button>
                 <button
                   type="button"
                   className="btn ghost"
-                  onClick={() => { setTitle(""); setBody(""); }}
+                  onClick={() => {
+                    setUserId("");
+                    setTopic(TOPICS[0]);
+                    setFeedback("");
+                    setPlatform("Android");
+                  }}
                 >
                   Clear
                 </button>
@@ -152,18 +217,15 @@ export default function Feedback() {
         </div>
       )}
 
-      {/* Layout: sidebar + content */}
+      {/* List + details */}
       <div className="page" style={{ marginTop: 12 }}>
-        {/* Sidebar list */}
         <aside className="sidebar">
           <div className="card">
-            <div className="small" style={{ marginBottom: 8, opacity: 0.8 }}>
-              Feedback
-            </div>
+            <div className="small" style={{ marginBottom: 8, opacity: 0.8 }}>Reports</div>
             {loading ? (
               <div className="small">Loading…</div>
             ) : rows.length === 0 ? (
-              <div className="small">No feedback yet.</div>
+              <div className="small">No reports yet.</div>
             ) : (
               <div className="post-list">
                 {rows.map((r) => {
@@ -175,15 +237,14 @@ export default function Feedback() {
                       onClick={() => setActiveId(r.id)}
                       role="button"
                       tabIndex={0}
-                      onKeyDown={(e) =>
-                        (e.key === "Enter" || e.key === " ") && setActiveId(r.id)
-                      }
+                      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setActiveId(r.id)}
                     >
-                      <div className="title">{r.title || "(untitled)"}</div>
+                      <div className="title">
+                        {r.topic || "Bug"} · {r.platform || "—"}
+                      </div>
                       <div className="date">
-                        {r.created_at
-                          ? new Date(r.created_at).toLocaleDateString()
-                          : ""}
+                        {r.user_id ? `User ${r.user_id}` : "(no user id)"} ·{" "}
+                        {r.created_at ? new Date(r.created_at).toLocaleDateString() : ""}
                       </div>
                     </div>
                   );
@@ -193,33 +254,31 @@ export default function Feedback() {
           </div>
         </aside>
 
-        {/* Single item content */}
         <main className="content">
           <div className="card">
             {loading ? (
               <div className="small">Loading…</div>
             ) : !activeItem ? (
-              <div className="small">Select a feedback item from the left.</div>
+              <div className="small">Select a report from the left.</div>
             ) : (
               <>
                 <div className="post-header">
-                  <h1 className="post-title">{activeItem.title || "Feedback"}</h1>
+                  <h1 className="post-title">
+                    {(activeItem.topic || "Bug") + " · " + (activeItem.platform || "—")}
+                  </h1>
                   {authed && (
-                    <button
-                      className="btn ghost"
-                      onClick={() => deleteRow(activeItem.id)}
-                    >
+                    <button className="btn ghost" onClick={() => deleteRow(activeItem.id)}>
                       Delete
                     </button>
                   )}
                 </div>
                 <div className="post-date">
-                  {activeItem.created_at
-                    ? new Date(activeItem.created_at).toLocaleString()
-                    : ""}
+                  {activeItem.created_at ? new Date(activeItem.created_at).toLocaleString() : ""}
+                  {" · "}
+                  {activeItem.user_id ? `User ${activeItem.user_id}` : "(no user id)"}
                 </div>
                 <div className="post-body" style={{ whiteSpace: "pre-wrap" }}>
-                  {activeItem.body}
+                  {activeItem.feedback}
                 </div>
               </>
             )}
