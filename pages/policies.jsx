@@ -164,11 +164,6 @@ export default function Policies() {
             new account.
           </li>
         </ul>
-
-        <p className="small-hint">
-          Tip: If you can’t access your User ID, let me know which game you last played and any details
-          that help me find your account faster.
-        </p>
       </section>
 
       <style jsx>{`
