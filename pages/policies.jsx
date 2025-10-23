@@ -421,4 +421,3 @@ function PolicyTile({ appId, title, subtitle, isOpen, onToggle, privacy, terms }
   );
 }
 
-Write it into here please? 
