@@ -9,7 +9,7 @@ export default function Layout({ children }) {
     <div className="wrap">
       {/* Floating/glassy top bar INSIDE the .wrap container */}
       <header className="topbar">
-        <div className="brand">an andysocial game</div>
+        <div className="brand">The Andysocial Zone</div>
         <nav className="nav" aria-label="Main">
           <Link href="/" className={`navlink ${pathname === "/" ? "active" : ""}`}>
             Blog
