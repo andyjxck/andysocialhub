@@ -198,24 +198,23 @@ const content = {
         <h4>Information We Collect</h4>
         <ul>
           <li><strong>Advertising Identifiers</strong> (IDFA/AAID) for displaying and measuring ads via Google AdMob.</li>
-          <li><strong>App Usage Data</strong> such as mood entries, reflections, feature interactions, and general analytics.</li>
-          <li><strong>Crash and Performance Data</strong> used to diagnose problems and improve stability.</li>
-          <li><strong>Optional User Content</strong> like notes, moods, and journal entries you create, stored securely in Supabase.</li>
+          <li><strong>App Usage Data</strong> such as mood entries, reflections, feature interactions, and analytics.</li>
+          <li><strong>Crash & Performance Data</strong> to help fix bugs and improve reliability.</li>
+          <li><strong>Optional Journal Entries</strong> and moods stored securely in Supabase and linked only to your account.</li>
         </ul>
 
         <h4>How We Use Data</h4>
         <ul>
           <li>Serve and measure ads through Google AdMob.</li>
-          <li>Analyze app usage and improve user experience.</li>
-          <li>Store and sync personal reflections and journal entries.</li>
+          <li>Analyze usage to improve your journaling experience.</li>
+          <li>Store and sync your reflections safely in the cloud.</li>
           <li>Maintain stability and optimize performance.</li>
         </ul>
 
         <h4>Sharing & Retention</h4>
         <p>
-          Shared only with trusted providers like Supabase (for secure storage) and Google AdMob (for ads and analytics).
-          Data is never sold or shared for tracking outside Zen Void. Journal data is retained only while your account exists
-          or until you request deletion.
+          Shared only with Supabase (for storage) and Google AdMob (for ads). Data is never sold or used for unrelated tracking.
+          Journal data is deleted on account deletion or upon your request.
         </p>
 
         <h4>Your Choices</h4>
@@ -228,57 +227,37 @@ const content = {
         <p>Zen Void is intended for users 13+ and not for children under 13.</p>
 
         <h4>International Users & Changes</h4>
-        <p>Data is processed in the United Kingdom. We may update this policy; continued use means acceptance.</p>
+        <p>Data is processed in the UK. We may update this policy; continued use means acceptance.</p>
       </>
     ),
     terms: (
       <>
         <p><strong>Last Updated: 23 October 2025</strong></p>
         <p>
-          These Terms of Service are a legal agreement between you and <strong>Andrew Blewett</strong> for your use of Zen Void.
-          By installing or using Zen Void, you agree to these Terms and the Privacy Policy.
+          These Terms of Service are a legal agreement between you and <strong>Andrew Blewett</strong> for using Zen Void.
         </p>
 
         <h4>Eligibility</h4>
-        <p>You must be 13 years or older. Under-18s require parental or guardian consent.</p>
+        <p>You must be 13+; under-18s require guardian consent.</p>
 
         <h4>License & Ownership</h4>
-        <p>
-          You’re granted a personal, non-transferable license to use Zen Void for journaling and reflection.
-          All rights in the app and content remain with Andrew Blewett.
-        </p>
+        <p>You get a personal, non-transferable license to use Zen Void. All rights remain with Andrew Blewett.</p>
 
         <h4>User Content</h4>
         <p>
-          Your journal entries and mood logs are private and only accessible to you. Do not submit personal information in
-          any optional shared features (if introduced). We reserve the right to remove inappropriate public content.
+          Your journal data is private to you. If community sharing is added later, don’t share personal info.
         </p>
-
-        <h4>Monetization</h4>
-        <p>Zen Void is free with ads. There are no in-app purchases or paid content at this time.</p>
 
         <h4>Prohibited Activities</h4>
         <ul>
-          <li>No attempts to hack, modify, or reverse engineer the app.</li>
-          <li>No interference with servers, analytics, or ads.</li>
-          <li>No misuse of journaling tools or community features (if added).</li>
+          <li>No hacking, reverse engineering, or misuse of analytics or ads.</li>
         </ul>
 
-        <h4>Disclaimers & Limitation of Liability</h4>
-        <p>
-          Zen Void is provided “as is.” While we take care to protect your data, no system is perfectly secure.
-          We are not liable for any indirect or consequential damages, including loss of data.
-        </p>
-
-        <h4>Termination</h4>
-        <p>
-          You may stop using Zen Void at any time. We may suspend or terminate accounts for policy violations or misuse.
-        </p>
+        <h4>Disclaimer</h4>
+        <p>Zen Void is provided “as is.” We’re not liable for indirect or consequential damages.</p>
 
         <h4>Governing Law</h4>
-        <p>
-          These Terms are governed by the laws of England & Wales, with exclusive jurisdiction in its courts.
-        </p>
+        <p>England & Wales law applies; exclusive jurisdiction in its courts.</p>
       </>
     ),
   },
@@ -294,7 +273,7 @@ const apps = [
 const LINKS = {
   GAME_VOID_IOS: "https://apps.apple.com/gb/app/game-void/id6751643961",
   SOCIAL_VOID_IOS: "https://apps.apple.com/gb/app/social-void/id6751636874",
-  ZEN_VOID_IOS: "https://apps.apple.com/gb/app/zen-void/id0000000000", // placeholder
+  ZEN_VOID_IOS: "https://apps.apple.com/gb/app/zen-void/id0000000000",
   TTT_SITE: "https://taptaptwo.co.uk",
   TTT_LOGO: "https://ucarecdn.com/7bdd361d-c411-41ce-b066-c1d20f88e3a7/-/format/auto/",
 };
@@ -305,39 +284,22 @@ export default function Policies() {
 
   return (
     <Layout>
-      {/* DOWNLOAD CTA SECTION */}
       <section className="downloads" aria-labelledby="downloads-title">
         <h2 id="downloads-title" className="dl-title">Download the Apps</h2>
-
         <div className="dl-grid">
-          {/* Game Void */}
-          <article className="dl-card">
-            <h3 className="dl-name">Game Void</h3>
-            <div className="store-buttons">
-              <a className="store-btn" href={LINKS.GAME_VOID_IOS} target="_blank" rel="noopener noreferrer"> iOS — Get on App Store</a>
-              <button className="store-btn disabled" type="button" disabled>Android — Coming Soon</button>
-            </div>
-          </article>
-
-          {/* Social Void */}
-          <article className="dl-card">
-            <h3 className="dl-name">Social Void</h3>
-            <div className="store-buttons">
-              <a className="store-btn" href={LINKS.SOCIAL_VOID_IOS} target="_blank" rel="noopener noreferrer"> iOS — Get on App Store</a>
-              <button className="store-btn disabled" type="button" disabled>Android — Coming Soon</button>
-            </div>
-          </article>
-
-          {/* Zen Void */}
-          <article className="dl-card">
-            <h3 className="dl-name">Zen Void</h3>
-            <div className="store-buttons">
-              <a className="store-btn" href={LINKS.ZEN_VOID_IOS} target="_blank" rel="noopener noreferrer"> iOS — Get on App Store</a>
-              <button className="store-btn disabled" type="button" disabled>Android — Coming Soon</button>
-            </div>
-          </article>
-
-          {/* Tap Tap Two */}
+          {[
+            { name: "Game Void", ios: LINKS.GAME_VOID_IOS },
+            { name: "Social Void", ios: LINKS.SOCIAL_VOID_IOS },
+            { name: "Zen Void", ios: LINKS.ZEN_VOID_IOS },
+          ].map(app => (
+            <article className="dl-card" key={app.name}>
+              <h3 className="dl-name">{app.name}</h3>
+              <div className="store-buttons">
+                <a className="store-btn" href={app.ios} target="_blank" rel="noopener noreferrer"> iOS — Get on App Store</a>
+                <button className="store-btn disabled" disabled>Android — Coming Soon</button>
+              </div>
+            </article>
+          ))}
           <article className="dl-card">
             <h3 className="dl-name">Tap Tap Two</h3>
             <div className="store-buttons">
@@ -350,7 +312,6 @@ export default function Policies() {
         </div>
       </section>
 
-      {/* POLICY CARDS */}
       <div className="policies-grid">
         {apps.map(({ id, title }) => {
           const isOpen = openId === id;
@@ -368,13 +329,42 @@ export default function Policies() {
           );
         })}
       </div>
-
-      {/* ACCOUNT DELETION SECTION REMAINS UNCHANGED */}
     </Layout>
   );
 }
 
 function PolicyTile({ appId, title, subtitle, isOpen, onToggle, privacy, terms }) {
   const [flipped, setFlipped] = useState(false);
-  // component unchanged
+  return (
+    <section className="tile">
+      <button className="tile-head" onClick={() => { onToggle(); if (isOpen) setFlipped(false); }}>
+        <div className="head-left">
+          <div className="dot" />
+          <div>
+            <div className="tile-title">{title}</div>
+            <div className="tile-sub small">{subtitle}</div>
+          </div>
+        </div>
+        <span className="chev">{isOpen ? "▲" : "▼"}</span>
+      </button>
+      <div className={`tile-body ${isOpen ? "open" : ""}`}>
+        {isOpen && (
+          <div className="flip-wrap">
+            <div className={`flip ${flipped ? "isBack" : ""}`} onClick={() => setFlipped(!flipped)}>
+              <div className="flip-face">
+                <h3 className="face-title">Privacy Policy</h3>
+                <div className="prose">{privacy}</div>
+                <div className="hint small">Click card to view Terms →</div>
+              </div>
+              <div className="flip-face back">
+                <h3 className="face-title">Terms of Service</h3>
+                <div className="prose">{terms}</div>
+                <div className="hint small">← Click card to view Privacy</div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
 }
