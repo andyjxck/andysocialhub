@@ -4,37 +4,40 @@ import Layout from "../components/Layout";
 import Link from "next/link";
 
 /**
- * Zen Void page with breathing intro.
- * Drop this file at /pages/zenvoid.jsx
+ * /pages/zenvoid.jsx
+ * Cinematic Zen Void intro + persistent page.
  *
- * Reuses your site's Layout (header/background) so the page chrome matches /pages/index.jsx
+ * Paste this file exactly at /pages/zenvoid.jsx (replace existing).
+ * All styles are inline (style jsx) so nothing else needs updating.
  */
 
 export default function ZenVoidPage() {
-  // ---------- CONFIG ----------
-  const CYCLES_BEFORE_WELCOME = 1; // inhale/exhale cycles before welcome
-  const INHALE_MS = 1800;
-  const HOLD_MS = 700;
-  const EXHALE_MS = 2200;
-  const WELCOME_DISPLAY_MS = 1600;
-  const USE_TTS = true; // set false to disable speech
+  // ===== CONFIG (tweak these if you want) =====
+  const INHALE_MS = 5000;
+  const HOLD_MS = 3000;
+  const EXHALE_MS = 5000;
+  const CYCLES_BEFORE_WELCOME = 1;
+  const WELCOME_SHOW_MS = 1800; // time between "Welcome to" and the big title reveal
+  const CURTAIN_HIDE_MS = 900; // how long before overlay removed after curtain open
+  const USE_TTS = false;
 
-  // ---------- STATE & REFS ----------
-  const [phase, setPhase] = useState("ready"); // 'ready'|'inhale'|'hold'|'exhale'|'welcome'|'done'
+  // ===== STATE & REFS =====
+  const [phase, setPhase] = useState("ready"); // ready | inhale | hold | exhale | welcome | done
   const [cycleCount, setCycleCount] = useState(0);
   const [introVisible, setIntroVisible] = useState(true);
   const [curtainOpen, setCurtainOpen] = useState(false);
+  const [showWelcomeTo, setShowWelcomeTo] = useState(false);
+  const [revealTitle, setRevealTitle] = useState(false);
   const timers = useRef([]);
   const cancelled = useRef(false);
 
-  // ---------- LIFECYCLE ----------
   useEffect(() => {
     cancelled.current = false;
-    startSequence();
-
+    runSequence();
     return () => {
       cancelled.current = true;
-      clearTimers();
+      timers.current.forEach((t) => clearTimeout(t));
+      timers.current = [];
       if (typeof window !== "undefined" && window.speechSynthesis) {
         try {
           window.speechSynthesis.cancel();
@@ -44,305 +47,443 @@ export default function ZenVoidPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ---------- HELPERS ----------
-  const clearTimers = () => {
-    timers.current.forEach((id) => clearTimeout(id));
-    timers.current = [];
-  };
-
-  const timer = (ms) =>
-    new Promise((resolve) => {
-      const id = setTimeout(resolve, ms);
+  const delay = (ms) =>
+    new Promise((res) => {
+      const id = setTimeout(() => {
+        res();
+        timers.current = timers.current.filter((i) => i !== id);
+      }, ms);
       timers.current.push(id);
     });
 
-  const speak = (text) => {
+  const speak = (txt) => {
     if (!USE_TTS) return;
-    if (typeof window === "undefined") return;
-    if (!("speechSynthesis" in window)) return;
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
     try {
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
+      const u = new SpeechSynthesisUtterance(txt);
       u.lang = "en-GB";
       u.rate = 0.95;
-      u.pitch = 1;
       window.speechSynthesis.speak(u);
-    } catch (e) {
-      // silent fail
-    }
+    } catch (e) {}
   };
 
-  // The main intro breathing sequence
-  async function startSequence() {
-    let cycles = 0;
-    while (!cancelled.current && cycles < CYCLES_BEFORE_WELCOME) {
-      // INHALE
+  // breathing / welcome sequence
+  async function runSequence() {
+    for (let i = 0; i < CYCLES_BEFORE_WELCOME; i++) {
+      if (cancelled.current) return;
       setPhase("inhale");
       speak("Breathe in");
-      await timer(INHALE_MS);
+      await delay(INHALE_MS);
       if (cancelled.current) return;
 
-      // HOLD
       setPhase("hold");
-      await timer(HOLD_MS);
+      await delay(HOLD_MS);
       if (cancelled.current) return;
 
-      // EXHALE
       setPhase("exhale");
       speak("Breathe out");
-      await timer(EXHALE_MS);
+      await delay(EXHALE_MS);
       if (cancelled.current) return;
 
-      cycles += 1;
       setCycleCount((c) => c + 1);
     }
 
     if (cancelled.current) return;
-
-    // Show welcome text briefly
     setPhase("welcome");
-    speak("Welcome to the andysocial zone");
-    await timer(WELCOME_DISPLAY_MS);
+    // show "Welcome to" then the big title reveal
+    setShowWelcomeTo(true);
+    speak("Welcome to the Andysocial Zone");
+    await delay(WELCOME_SHOW_MS);
+    if (cancelled.current) return;
+    setRevealTitle(true);
+
+    // small pause so user sees the full welcome
+    await delay(700);
     if (cancelled.current) return;
 
-    // Curtain open
+    // curtain open
     setPhase("done");
-    await timer(120);
-    if (cancelled.current) return;
-
     setCurtainOpen(true);
-    // wait for curtain animation to finish (match CSS transition)
-    await timer(900);
+
+    // wait animation
+    await delay(CURTAIN_HIDE_MS);
     if (cancelled.current) return;
 
     setIntroVisible(false);
   }
 
-  // Skip intro immediately and reveal page
+  // skip intro immediately
   const handleSkip = () => {
     cancelled.current = true;
-    clearTimers();
+    timers.current.forEach((t) => clearTimeout(t));
+    timers.current = [];
     try {
       if (typeof window !== "undefined" && window.speechSynthesis) {
         window.speechSynthesis.cancel();
       }
     } catch (e) {}
+    // reveal instantly with curtain
+    setShowWelcomeTo(false);
+    setRevealTitle(false);
     setCurtainOpen(true);
-    setTimeout(() => setIntroVisible(false), 700);
+    setTimeout(() => setIntroVisible(false), CURTAIN_HIDE_MS);
   };
 
-  // Orb visual values derived from phase
+  // compute orb style values from phase (keeps transitions smooth)
   const orbScale = (() => {
-    if (phase === "inhale") return 1.28;
-    if (phase === "hold") return 1.3;
-    if (phase === "exhale") return 0.85;
-    return 1;
-  })();
-  const orbOpacity = (() => {
-    if (phase === "inhale") return 0.96;
-    if (phase === "hold") return 0.92;
-    if (phase === "exhale") return 0.56;
-    return 0.8;
-  })();
-  const orbGradient = (() => {
-    if (phase === "exhale") return "linear-gradient(180deg,#86efac,#4ade80)";
-    if (phase === "inhale") return "linear-gradient(180deg,#c4b5fd,#a78bfa)";
-    if (phase === "hold") return "linear-gradient(180deg,#a5b4fc,#818cf8)";
-    if (phase === "welcome") return "linear-gradient(180deg,#ffd27f,#ffb86b)";
-    return "linear-gradient(180deg,#c4b5fd,#a78bfa)";
-  })();
-
-  // Phase text shown under orb
-  const phaseText = (() => {
     switch (phase) {
       case "inhale":
-        return "Breathe In";
+        return 1.34;
       case "hold":
-        return "Hold";
+        return 1.38;
       case "exhale":
-        return "Breathe Out";
-      case "welcome":
-        return "Welcome to the andysocial zone";
+        return 0.88;
       default:
-        return "Find a comfortable position";
+        return 1;
     }
   })();
 
-  // ---------- RENDER ----------
+  const orbGlow = (() => {
+    switch (phase) {
+      case "inhale":
+        return 0.95;
+      case "hold":
+        return 0.92;
+      case "exhale":
+        return 0.55;
+      default:
+        return 0.8;
+    }
+  })();
+
+  const orbGradient = (() => {
+    if (phase === "inhale") return "linear-gradient(180deg,#d6bcff 0%, #a78bfa 60%)";
+    if (phase === "hold") return "linear-gradient(180deg,#c7d2fe 0%, #93c5fd 60%)";
+    if (phase === "exhale") return "linear-gradient(180deg,#86efac 0%, #34d399 60%)";
+    if (phase === "welcome") return "linear-gradient(180deg,#ffd27f 0%, #ffb86b 60%)";
+    return "linear-gradient(180deg,#c4b5fd 0%, #a78bfa 60%)";
+  })();
+
+  // helper to split title into animated chars
+  const title = "THE ANDYSOCIAL ZONE";
+  const titleChars = title.split("");
+
   return (
     <Layout>
-      {/* Page content - uses your site's layout / chrome */}
-      <div className="page" style={{ marginTop: 12 }}>
-        <main className="content" style={{ width: "100%" }}>
-          <div className="card">
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div className="logo" style={{ width: 56, height: 56, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg,#22294a,#1b253b)", color: "#ffd27f", fontWeight: 700 }}>
-                    ZV
-                  </div>
-                  <div>
-                    <h1 style={{ margin: 0 }}>Zen Void</h1>
-                    <div style={{ color: "#9aa7bf", fontSize: 13 }}>A short place to breathe, reset and reflect</div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <Link href="/">
-                  <a className="btn ghost">Back Home</a>
-                </Link>
-              </div>
+      <div className="zen-root">
+        <div className="zen-container">
+          <header className="zen-header">
+            <div className="zen-logo">ZV</div>
+            <div>
+              <h1 className="zen-title">Zen Void</h1>
+              <div className="zen-sub">A short place to breathe, reset and reflect</div>
             </div>
+            <div className="zen-actions">
+              <Link href="/">
+                <a className="btn ghost">Back Home</a>
+              </Link>
+            </div>
+          </header>
 
-            <div style={{ marginTop: 18 }}>
-              <p style={{ color: "#d6dff2" }}>
-                Zen Void is a lightweight breathing and mood-reset experience built to help you take quick,
-                calming breaks during your day. Click "Skip Intro" anytime to jump straight to the content.
+          {/* Content card - centered and fixed width so layout is balanced */}
+          <div className="zen-content">
+            <div className="zen-card">
+              <p className="lead">
+                Zen Void is a lightweight journalling and breathing space created to help you slow down,
+                collect your thoughts and come back to your day clearer.
               </p>
-            </div>
 
-            {/* Main explanatory content (this is the 'normal' page content revealed after intro) */}
-            <section style={{ marginTop: 16 }}>
               <h2>What is Zen Void?</h2>
               <p>
-                Zen Void is a minimal breathing guide with soothing visuals designed for short sessions (1–5 minutes).
-                Use it when you need a moment to step back, calm your breath, and refocus.
+                Zen Void is a journalling app with a small set of features that help you form a calm,
+                reflective habit: a breathing room to calm you, an interactive journal and calendar, personalised
+                insights and a playful "moon" you can name to anchor your writing.
               </p>
 
-              <h3>How it works</h3>
+              <h3>Core features</h3>
+              <ul>
+                <li><strong>Breathing room:</strong> A simple, calming guided breathing experience for short resets.</li>
+                <li><strong>Journalling:</strong> Quick entries, rich reflections and the ability to name your moon to form attachment to your practice.</li>
+                <li><strong>Calendar:</strong> Interactive timeline of entries so you can revisit and spot patterns.</li>
+                <li><strong>Insights:</strong> Personalised reflections and trends that make sense, not noise.</li>
+              </ul>
+
+              <h3>How to use</h3>
               <ol>
-                <li>Follow the orb: inhale — hold — exhale.</li>
-                <li>Let the session guide your breath and attention; no pressure to match exactly.</li>
-                <li>Return to the page feeling a touch calmer and clearer.</li>
+                <li>Open Zen Void when you need a moment.</li>
+                <li>Let the breathing room guide you (follow the orb and text cues).</li>
+                <li>Write a quick note or reflection in your journal — name your moon to make it feel yours.</li>
               </ol>
 
-              <h3>Quick tips</h3>
-              <ul>
-                <li>Breathe through your nose when possible.</li>
-                <li>Keep shoulders relaxed; let the exhale be slightly longer than the inhale.</li>
-                <li>Use short sessions frequently rather than one long session.</li>
-              </ul>
-            </section>
+              <p className="muted">Tip: short daily check-ins beat long infrequent journalling for forming a habit.</p>
+            </div>
           </div>
-        </main>
-      </div>
+        </div>
 
-      {/* Intro overlay (fixed) */}
-      {introVisible && (
-        <div className={`intro-overlay ${curtainOpen ? "curtain-open" : ""}`} role="dialog" aria-label="Zen Void intro" style={overlayStyle()}>
-          <div className="intro-inner" style={introInnerStyle()}>
-            <div className="orb-wrap" aria-hidden="true">
+        {/* Intro overlay (orb + welcome + curtains) */}
+        {introVisible && (
+          <div className={`intro-overlay ${curtainOpen ? "curtain-open" : ""}`} role="dialog" aria-label="Zen Void intro">
+            <div className="intro-center" aria-hidden={false}>
+              {/* Orb with layered glows and subtle animated rings */}
               <div
-                className="orb"
+                className="orb-outer"
                 style={{
-                  width: 220,
-                  height: 220,
-                  borderRadius: 999,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0 10px 40px rgba(0,0,0,0.6), 0 0 80px rgba(255,255,255,0.03) inset",
-                  transition: "transform 900ms cubic-bezier(.2,.9,.2,1), opacity 900ms ease",
                   transform: `scale(${orbScale})`,
-                  opacity: orbOpacity,
-                  background: orbGradient,
+                  boxShadow: `0 30px 80px rgba(2,6,23,${0.5 * orbGlow}) , 0 0 120px rgba(167,139,250,${0.08 * orbGlow})`,
+                  transition: "transform 900ms cubic-bezier(.2,.9,.2,1), box-shadow 700ms ease",
                 }}
               >
-                <div style={{ width: 140, height: 140, borderRadius: 999, background: "rgba(255,255,255,0.08)", boxShadow: "inset 0 -6px 18px rgba(255,255,255,0.03)" }} />
+                <div
+                  className="orb"
+                  style={{
+                    background: orbGradient,
+                    opacity: orbGlow,
+                    transition: "background 600ms ease, opacity 600ms ease",
+                  }}
+                >
+                  <div className="orb-core" />
+                  <div className="orb-ring ring-1" />
+                  <div className="orb-ring ring-2" />
+                </div>
+              </div>
+
+              {/* Phase / welcome text */}
+              <div className="intro-text">
+                {phase !== "welcome" && phase !== "done" && (
+                  <>
+                    <div className="phase-main">{phase === "inhale" ? "Breathe In" : phase === "hold" ? "Hold" : "Breathe Out"}</div>
+                    <div className="phase-sub">Slowly. Cycle {cycleCount + 1} of {CYCLES_BEFORE_WELCOME}</div>
+                  </>
+                )}
+
+                {phase === "welcome" && (
+                  <div className="welcome-wrap">
+                    {showWelcomeTo && <div className="welcome-small">Welcome to</div>}
+                    <div className={`welcome-title ${revealTitle ? "reveal" : ""}`}>
+                      {titleChars.map((ch, i) => (
+                        <span key={i} className="char" style={{ transitionDelay: `${i * 35}ms` }}>{ch}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="intro-controls">
+                <button className="btn ghost skip" onClick={handleSkip} aria-label="Skip intro">Skip Intro</button>
               </div>
             </div>
 
-            <div className="phase-text" aria-live="polite" style={{ textAlign: "center", marginTop: 6 }}>
-              <div style={{ fontSize: 20, fontWeight: 600 }}>{phaseText}</div>
-              {phase !== "welcome" && phase !== "done" && (
-                <div style={{ fontSize: 13, color: "#9aa7bf", marginTop: 6 }}>
-                  Cycle {cycleCount} of {CYCLES_BEFORE_WELCOME}
-                </div>
-              )}
-            </div>
-
-            <div className="intro-controls" style={{ marginTop: 10 }}>
-              <button className="skip-btn btn ghost" onClick={handleSkip} aria-label="Skip intro" style={{ padding: "8px 12px", borderRadius: 999 }}>
-                Skip Intro
-              </button>
-            </div>
+            {/* curtains */}
+            <div className={`curtain left ${curtainOpen ? "open" : ""}`} />
+            <div className={`curtain right ${curtainOpen ? "open" : ""}`} />
           </div>
+        )}
+      </div>
 
-          {/* Curtains */}
-          <div className={`curtain left ${curtainOpen ? "open" : ""}`} aria-hidden="true" style={leftCurtainStyle(curtainOpen)} />
-          <div className={`curtain right ${curtainOpen ? "open" : ""}`} aria-hidden="true" style={rightCurtainStyle(curtainOpen)} />
-        </div>
-      )}
-
-      {/* Inline styles specific to this page (kept here so file is self-contained) */}
       <style jsx>{`
-        /* minimal scoped CSS so the page matches your site's aesthetic */
-        .card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius: 14px; padding: 18px; box-shadow: 0 8px 30px rgba(2,6,23,0.7); }
-        .logo { font-weight: 700; color: #ffd27f; }
-        .btn { background: #ffd27f; color: #111827; padding: 8px 12px; border-radius: 10px; font-weight: 600; text-decoration: none; border: none; }
-        .btn.ghost { background: transparent; color: #f8fafc; border: 1px solid rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 10px; }
+        /* Page shell & container (keeps the site chrome identical) */
+        .zen-root {
+          min-height: 100vh;
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+          padding: 36px 24px;
+          position: relative;
+          overflow-x: hidden;
+        }
+
+        .zen-container {
+          width: 100%;
+          max-width: 1100px;
+        }
+
+        .zen-header {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 18px;
+        }
+        .zen-logo {
+          width: 56px;
+          height: 56px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg,#22294a,#1b253b);
+          color: #ffd27f;
+          font-weight: 800;
+          font-size: 16px;
+          box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+        }
+        .zen-title { margin: 0; font-size: 20px; font-weight: 700; }
+        .zen-sub { color: #9aa7bf; font-size: 13px; }
+        .zen-actions { margin-left: auto; }
+
+        .zen-content { display: flex; justify-content: center; }
+        .zen-card {
+          width: 100%;
+          max-width: 820px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+          border-radius: 14px;
+          padding: 26px;
+          box-shadow: 0 8px 30px rgba(2,6,23,0.7);
+        }
+
+        .lead { color: #d6dff2; font-size: 16px; margin-top: 0; }
+
+        h2 { margin-top: 18px; font-size: 20px; }
+        h3 { margin-top: 14px; }
+        ul { margin-left: 18px; }
+        ol { margin-left: 18px; }
+
+        .muted { color: #9aa7bf; font-size: 14px; margin-top: 12px; }
+
+        /* Intro overlay */
+        .intro-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 120;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: radial-gradient(800px 400px at 50% 28%, rgba(255,255,255,0.02), transparent), linear-gradient(180deg, rgba(2,6,23,0.45), rgba(2,6,23,0.6));
+          transition: background 600ms ease;
+        }
+        .intro-overlay.curtain-open {
+          background: transparent;
+        }
+
+        .intro-center {
+          z-index: 140;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          gap: 18px;
+          padding: 28px;
+          border-radius: 12px;
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+        }
+
+        /* Orb visuals */
+        .orb-outer {
+          border-radius: 999px;
+          display: grid;
+          place-items: center;
+          width: 260px;
+          height: 260px;
+        }
+        .orb {
+          position: relative;
+          width: 220px;
+          height: 220px;
+          border-radius: 999px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: visible;
+        }
+        .orb-core {
+          width: 132px;
+          height: 132px;
+          border-radius: 999px;
+          background: rgba(255,255,255,0.08);
+          box-shadow: inset 0 -8px 24px rgba(255,255,255,0.03);
+          z-index: 6;
+        }
+
+        /* animated rings */
+        .orb-ring {
+          position: absolute;
+          border-radius: 999px;
+          z-index: 3;
+          pointer-events: none;
+          opacity: 0.16;
+        }
+        .orb-ring.ring-1 {
+          width: 300px;
+          height: 300px;
+          background: radial-gradient(circle, rgba(167,139,250,0.06), transparent 35%);
+          animation: ring-rotate 12s linear infinite;
+        }
+        .orb-ring.ring-2 {
+          width: 360px;
+          height: 360px;
+          background: radial-gradient(circle, rgba(74,222,128,0.03), transparent 30%);
+          animation: ring-rotate-rev 18s linear infinite;
+        }
+        @keyframes ring-rotate { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+        @keyframes ring-rotate-rev { from { transform: rotate(0deg) } to { transform: rotate(-360deg) } }
+
+        .intro-text { text-align: center; color: #f8fafc; }
+        .phase-main { font-size: 22px; font-weight: 700; letter-spacing: .6px; }
+        .phase-sub { margin-top: 6px; color: #9aa7bf; font-size: 13px; }
+
+        /* welcome */
+        .welcome-wrap { display:flex; flex-direction:column; align-items:center; gap:10px; }
+        .welcome-small { font-size: 18px; color: #ffe9c8; opacity: .95; font-weight:600; transform: translateY(0); transition: transform 420ms ease, opacity 420ms ease; }
+        .welcome-title {
+          display:flex;
+          gap: 4px;
+          overflow: hidden;
+          white-space: nowrap;
+          transform: translateY(6px);
+          opacity: 0;
+          filter: drop-shadow(0 8px 18px rgba(0,0,0,0.45));
+          transition: opacity 480ms ease, transform 480ms cubic-bezier(.2,.9,.2,1);
+          font-weight: 900;
+          font-size: 28px;
+          letter-spacing: 2px;
+        }
+        .welcome-title.reveal { transform: translateY(0); opacity: 1; }
+
+        /* per-character reveal (stagger) */
+        .char {
+          display:inline-block;
+          transform: translateY(18px) rotateX(12deg);
+          opacity: 0;
+          color: #fff;
+        }
+        .welcome-title.reveal .char {
+          transform: translateY(0) rotateX(0);
+          opacity: 1;
+        }
+        .welcome-title.reveal .char:nth-child(odd) { color: #ffd27f; }
+        .welcome-title.reveal .char:nth-child(even) { color: #ffffff; }
+
+        /* skip button */
+        .intro-controls { margin-top: 6px; display:flex; gap:10px; }
+        .btn { background: #ffd27f; color: #111827; padding: 8px 12px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; }
+        .btn.ghost { background: transparent; color: #f8fafc; border: 1px solid rgba(255,255,255,0.06); }
+        .btn.ghost.skip { padding: 8px 14px; border-radius: 999px; }
+
+        /* curtains */
+        .curtain {
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          width: 50%;
+          z-index: 130;
+          background: linear-gradient(180deg, rgba(8,12,32,0.98), rgba(8,10,24,0.98));
+          transition: transform 900ms cubic-bezier(.2,.9,.2,1);
+        }
+        .curtain.left { left: 0; transform: translateX(0%); border-right: 1px solid rgba(255,255,255,0.02); }
+        .curtain.right { right: 0; transform: translateX(0%); border-left: 1px solid rgba(255,255,255,0.02); }
+        .curtain.open.left { transform: translateX(-110%); }
+        .curtain.open.right { transform: translateX(110%); }
+
+        /* responsive */
+        @media (max-width: 880px) {
+          .zen-container { padding: 0 8px; }
+          .zen-card { padding: 18px; max-width: 100%; }
+          .orb-outer { width: 210px; height: 210px; }
+          .orb { width: 180px; height: 180px; }
+          .orb-core { width: 110px; height: 110px; }
+          .welcome-title { font-size: 20px; }
+        }
       `}</style>
     </Layout>
   );
 }
-
-/* ---------- Helper inline-style factory functions ---------- */
-
-function overlayStyle() {
-  return {
-    position: "fixed",
-    inset: 0,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 60,
-    background: "linear-gradient(180deg, rgba(2,6,23,0.4), rgba(2,6,23,0.6)), radial-gradient(800px 400px at 50% 30%, rgba(255,200,120,0.03), transparent)",
-    transition: "opacity .5s ease, visibility .5s ease",
-  };
-}
-
-function introInnerStyle() {
-  return {
-    zIndex: 80,
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
-    gap: 20,
-    padding: 28,
-    borderRadius: 12,
-    backdropFilter: "blur(6px)",
-    WebkitBackdropFilter: "blur(6px)",
-  };
-}
-
-function leftCurtainStyle(open) {
-  return {
-    position: "fixed",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    width: "50%",
-    background: "linear-gradient(180deg, rgba(8,12,32,0.95), rgba(8,10,24,0.98))",
-    zIndex: 70,
-    transform: open ? "translateX(-110%)" : "translateX(0%)",
-    transition: "transform 800ms cubic-bezier(.2,.9,.2,1)",
-    borderRight: "1px solid rgba(255,255,255,0.02)",
-  };
-}
-
-function rightCurtainStyle(open) {
-  return {
-    position: "fixed",
-    top: 0,
-    bottom: 0,
-    right: 0,
-    width: "50%",
-    background: "linear-gradient(180deg, rgba(8,12,32,0.95), rgba(8,10,24,0.98))",
-    zIndex: 70,
-    transform: open ? "translateX(110%)" : "translateX(0%)",
-    transition: "transform 800ms cubic-bezier(.2,.9,.2,1)",
-    borderLeft: "1px solid rgba(255,255,255,0.02)",
-  };
-}
-
