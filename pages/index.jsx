@@ -190,7 +190,7 @@ async function runSequence() {
           <header className="zen-header">
             <div className="zen-logo">
   <img
-    src="https://i.ibb.co/xyz123/zenvoid-logo.png"
+    src="https://i.ibb.co/Vcj3wwGM/Chat-GPT-Image-Oct-23-2025-03-43-00-PM.png"
     alt="Zen Void Logo"
     className="zen-logo-img"
   />
