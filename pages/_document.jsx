@@ -5,7 +5,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <title>The Andysocial Zone</title>
+        <title>Andysocial Zone</title>
         <meta
           name="description"
           content="Welcome to The Andysocial Zone — home of Game Void, Social Void, Zen Void, and more."
