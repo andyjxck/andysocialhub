@@ -96,21 +96,23 @@ async function runSequence() {
   setShowWelcomeTo(true);
   speak("Welcome to the Andysocial Zone");
 
+    // 🌙 Fade out orb before opening curtains
+  const orbEl = document.querySelector(".orb");
+  if (orbEl) {
+    orbEl.style.transition = "opacity 1s ease";
+    orbEl.style.opacity = "0";
+  }
+  
   await delay(WELCOME_SHOW_MS);
   if (cancelled.current) return;
 
   setRevealTitle(true);
 
   // small pause so user sees full welcome
-  await delay(700);
+  await delay(1500);
   if (cancelled.current) return;
 
-  // 🌙 Fade out orb before opening curtains
-  const orbEl = document.querySelector(".orb");
-  if (orbEl) {
-    orbEl.style.transition = "opacity 1s ease";
-    orbEl.style.opacity = "0";
-  }
+
 
   // open curtains
   setPhase("done");
