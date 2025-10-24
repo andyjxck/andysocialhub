@@ -11,8 +11,8 @@ export default function Layout({ children }) {
 
         <nav className="nav" aria-label="Main">
           <Link href="/" className={`navlink ${pathname === "/" ? "active" : ""}`}>
-            <span className="icon">📝</span>
-            <span className="label">Blog</span>
+            <span className="icon">🪷</span>
+            <span className="label">Zen Void</span>
           </Link>
 
           <Link href="/policies" className={`navlink ${pathname === "/policies" ? "active" : ""}`}>
@@ -23,6 +23,11 @@ export default function Layout({ children }) {
           <Link href="/contact" className={`navlink ${pathname === "/contact" ? "active" : ""}`}>
             <span className="icon">💬</span>
             <span className="label">Contact</span>
+          </Link>
+
+          <Link href="/contact" className={`navlink ${pathname === "/blog" ? "active" : ""}`}>
+            <span className="icon">📝</span>
+            <span className="label">Blog</span>
           </Link>
         </nav>
       </header>
