@@ -12,7 +12,7 @@ import Link from "next/link";
 
 export default function ZenVoidPage() {
   // ---------- CONFIG ----------
-  const CYCLES_BEFORE_WELCOME = 3; // inhale/exhale cycles before welcome
+  const CYCLES_BEFORE_WELCOME = 1; // inhale/exhale cycles before welcome
   const INHALE_MS = 1800;
   const HOLD_MS = 700;
   const EXHALE_MS = 2200;
