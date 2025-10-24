@@ -283,40 +283,42 @@ export default function Policies() {
         </div>
       </section>
 
-      {/* Zen Void full-width */}
-      <div className="zen-wide">
-        {appsTop.map(({ id, title }) => (
-          <PolicyTile
-            key={id}
-            appId={id}
-            title={title}
-            subtitle={content[id].subtitle}
-            isOpen={openId === id}
-            onToggle={() => setOpenId(openId === id ? null : id)}
-            privacy={content[id].privacy}
-            terms={content[id].terms}
-          />
-        ))}
+           {/* policies container: top wide card spanning two columns, then two cards side-by-side */}
+      <div className="policies-container">
+        <div className="zen-wide">
+          {appsTop.map(({ id, title }) => (
+            <PolicyTile
+              key={id}
+              appId={id}
+              title={title}
+              subtitle={content[id].subtitle}
+              isOpen={openId === id}
+              onToggle={() => setOpenId(openId === id ? null : id)}
+              privacy={content[id].privacy}
+              terms={content[id].terms}
+            />
+          ))}
+        </div>
+
+        <div className="policies-grid">
+          {appsBottom.map(({ id, title }) => {
+            const isOpen = openId === id;
+            return (
+              <PolicyTile
+                key={id}
+                appId={id}
+                title={title}
+                subtitle={content[id].subtitle}
+                isOpen={isOpen}
+                onToggle={() => setOpenId(isOpen ? null : id)}
+                privacy={content[id].privacy}
+                terms={content[id].terms}
+              />
+            );
+          })}
+        </div>
       </div>
 
-      {/* Game Void + Social Void */}
-      <div className="policies-grid">
-        {appsBottom.map(({ id, title }) => (
-          <PolicyTile
-            key={id}
-            appId={id}
-            title={title}
-            subtitle={content[id].subtitle}
-            isOpen={openId === id}
-            onToggle={() => setOpenId(openId === id ? null : id)}
-            privacy={content[id].privacy}
-            terms={content[id].terms}
-          />
-        ))}
-      </div>
-    </Layout>
-  );
-}
 
 function PolicyTile({ appId, title, subtitle, isOpen, onToggle, privacy, terms }) {
   const [flipped, setFlipped] = useState(false);
