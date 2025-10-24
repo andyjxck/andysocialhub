@@ -318,6 +318,7 @@ export default function Policies() {
           })}
         </div>
       </div>
+    </div>
 
 
 function PolicyTile({ appId, title, subtitle, isOpen, onToggle, privacy, terms }) {
