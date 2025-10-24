@@ -25,7 +25,7 @@ export default function Layout({ children }) {
             <span className="label">Contact</span>
           </Link>
 
-          <Link href="/contact" className={`navlink ${pathname === "/blog" ? "active" : ""}`}>
+          <Link href="/blog" className={`navlink ${pathname === "/blog" ? "active" : ""}`}>
             <span className="icon">📝</span>
             <span className="label">Blog</span>
           </Link>
