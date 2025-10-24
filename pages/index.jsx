@@ -187,7 +187,7 @@ async function runSequence() {
         <div className="zen-container">
           <header className="zen-header">
             <div className="zen-logo">
-  <img src="/images/zenvoid-logo.png" alt="Zen Void Logo" className="zen-logo-img" />
+  <img src="https://ibb.co/1tvbzzNR" alt="Zen Void Logo" className="zen-logo-img" />
 </div>
             <div>
               <h1 className="zen-title">Zen Void</h1>
