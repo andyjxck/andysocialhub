@@ -13,12 +13,12 @@ import Link from "next/link";
 
 export default function ZenVoidPage() {
   // ===== CONFIG (tweak these if you want) =====
-  const INHALE_MS = 5000;
-  const HOLD_MS = 3000;
-  const EXHALE_MS = 5000;
+  const INHALE_MS = 3000;
+  const HOLD_MS = 2000;
+  const EXHALE_MS = 3000;
   const CYCLES_BEFORE_WELCOME = 1;
-  const WELCOME_SHOW_MS = 1800; // time between "Welcome to" and the big title reveal
-  const CURTAIN_HIDE_MS = 900; // how long before overlay removed after curtain open
+  const WELCOME_SHOW_MS = 1000; // time between "Welcome to" and the big title reveal
+  const CURTAIN_HIDE_MS = 1500; // how long before overlay removed after curtain open
   const USE_TTS = false;
 
   // ===== STATE & REFS =====
@@ -180,9 +180,6 @@ export default function ZenVoidPage() {
               <div className="zen-sub">A short place to breathe, reset and reflect</div>
             </div>
             <div className="zen-actions">
-              <Link href="/">
-                <a className="btn ghost">Back Home</a>
-              </Link>
             </div>
           </header>
 
@@ -253,7 +250,7 @@ export default function ZenVoidPage() {
                 {phase !== "welcome" && phase !== "done" && (
                   <>
                     <div className="phase-main">{phase === "inhale" ? "Breathe In" : phase === "hold" ? "Hold" : "Breathe Out"}</div>
-                    <div className="phase-sub">Slowly. Cycle {cycleCount + 1} of {CYCLES_BEFORE_WELCOME}</div>
+                    <div className="phase-sub">Slow down.</div>
                   </>
                 )}
 
@@ -450,8 +447,8 @@ export default function ZenVoidPage() {
           transform: translateY(0) rotateX(0);
           opacity: 1;
         }
-        .welcome-title.reveal .char:nth-child(odd) { color: #ffd27f; }
-        .welcome-title.reveal .char:nth-child(even) { color: #ffffff; }
+        .welcome-title.reveal .char:nth-child(odd) { color: #C7B8EA; }
+        .welcome-title.reveal .char:nth-child(even) { color: #A7C7E7; }
 
         /* skip button */
         .intro-controls { margin-top: 6px; display:flex; gap:10px; }
