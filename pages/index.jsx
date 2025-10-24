@@ -69,49 +69,61 @@ export default function ZenVoidPage() {
   };
 
   // breathing / welcome sequence
-  async function runSequence() {
-    for (let i = 0; i < CYCLES_BEFORE_WELCOME; i++) {
-      if (cancelled.current) return;
-      setPhase("inhale");
-      speak("Breathe in");
-      await delay(INHALE_MS);
-      if (cancelled.current) return;
-
-      setPhase("hold");
-      await delay(HOLD_MS);
-      if (cancelled.current) return;
-
-      setPhase("exhale");
-      speak("Breathe out");
-      await delay(EXHALE_MS);
-      if (cancelled.current) return;
-
-      setCycleCount((c) => c + 1);
-    }
-
+async function runSequence() {
+  for (let i = 0; i < CYCLES_BEFORE_WELCOME; i++) {
     if (cancelled.current) return;
-    setPhase("welcome");
-    // show "Welcome to" then the big title reveal
-    setShowWelcomeTo(true);
-    speak("Welcome to the Andysocial Zone");
-    await delay(WELCOME_SHOW_MS);
-    if (cancelled.current) return;
-    setRevealTitle(true);
-
-    // small pause so user sees the full welcome
-    await delay(700);
+    setPhase("inhale");
+    speak("Breathe in");
+    await delay(INHALE_MS);
     if (cancelled.current) return;
 
-    // curtain open
-    setPhase("done");
-    setCurtainOpen(true);
-
-    // wait animation
-    await delay(CURTAIN_HIDE_MS);
+    setPhase("hold");
+    await delay(HOLD_MS);
     if (cancelled.current) return;
 
-    setIntroVisible(false);
+    setPhase("exhale");
+    speak("Breathe out");
+    await delay(EXHALE_MS);
+    if (cancelled.current) return;
+
+    setCycleCount((c) => c + 1);
   }
+
+  if (cancelled.current) return;
+
+  // start welcome sequence
+  setPhase("welcome");
+  setShowWelcomeTo(true);
+  speak("Welcome to the Andysocial Zone");
+
+  await delay(WELCOME_SHOW_MS);
+  if (cancelled.current) return;
+
+  setRevealTitle(true);
+
+  // small pause so user sees full welcome
+  await delay(700);
+  if (cancelled.current) return;
+
+  // 🌙 Fade out orb before opening curtains
+  const orbEl = document.querySelector(".orb");
+  if (orbEl) {
+    orbEl.style.transition = "opacity 1s ease";
+    orbEl.style.opacity = "0";
+  }
+
+  // open curtains
+  setPhase("done");
+  setCurtainOpen(true);
+
+  // wait animation
+  await delay(CURTAIN_HIDE_MS);
+  if (cancelled.current) return;
+
+  // hide intro fully
+  setIntroVisible(false);
+}
+
 
   // skip intro immediately
   const handleSkip = () => {
