@@ -475,55 +475,91 @@ function PolicyTile({ appId, title, subtitle, isOpen, onToggle, privacy, terms }
       </div>
 
       {/* Styles (scoped) */}
-      <style jsx>{`
-        .tile {
-          border-radius: 16px; overflow: hidden;
-          border: 1px solid rgba(255,255,255,0.18);
-          background: rgba(10,10,22,0.28);
-          backdrop-filter: blur(10px);
-          box-shadow: 0 10px 30px rgba(7,7,12,0.15);
-        }
+    <style jsx>{`
+  .tile {
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(10,10,22,0.28);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(7,7,12,0.15);
+  }
 
-        .tile-head {
-          width: 100%; background: rgba(255,255,255,0.04); border: none;
-          padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-          cursor: pointer; font-weight: 700; letter-spacing: 0.2px; border-bottom: 1px solid rgba(255,255,255,0.12);
-          color: inherit; text-align: left;
-        }
-        .tile-head:hover { background: rgba(124,58,237,0.15); }
+  .tile-head {
+    width: 100%; background: rgba(255,255,255,0.04); border: none;
+    padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    cursor: pointer; font-weight: 700; letter-spacing: 0.2px; border-bottom: 1px solid rgba(255,255,255,0.12);
+    color: inherit; text-align: left;
+  }
+  .tile-head:hover { background: rgba(124,58,237,0.15); }
 
-        .head-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #7c3aed, #4c1d95); box-shadow: 0 0 10px rgba(124,58,237,0.6); flex-shrink: 0; }
-        .tile-title { font-weight: 800; }
-        .tile-sub { opacity: 0.85; }
-        .chev { opacity: 0.9; font-size: 13px; }
+  .head-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #7c3aed, #4c1d95); box-shadow: 0 0 10px rgba(124,58,237,0.6); flex-shrink: 0; }
+  .tile-title { font-weight: 800; }
+  .tile-sub { opacity: 0.85; }
+  .chev { opacity: 0.9; font-size: 13px; }
 
-        .tile-body { max-height: 0; opacity: 0; overflow: hidden; transform: translateY(-4px);
-          transition: max-height 260ms ease, opacity 180ms ease, transform 180ms ease; }
-        .tile-body.open { max-height: 1200px; opacity: 1; transform: translateY(0); }
+  /* allow the body to expand with the content (page scrolls) */
+  .tile-body {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-4px);
+    transition: max-height 260ms ease, opacity 180ms ease, transform 180ms ease;
+  }
+  .tile-body.open {
+    max-height: 2000px; /* large enough to fit content */
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-        .flip-wrap { padding: 14px; perspective: 1200px; }
-        .flip { position: relative; width: 100%; min-height: 300px; transform-style: preserve-3d; transition: transform 0.6s ease; cursor: pointer; }
-        .flip.isBack { transform: rotateY(180deg); }
+  .flip-wrap { padding: 14px; perspective: 1200px; }
 
-        .flip-face { position: absolute; inset: 0; border-radius: 12px; background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.15); padding: 18px 16px; backface-visibility: hidden; overflow: auto; display: grid; gap: 12px; }
-        .flip-face.back { transform: rotateY(180deg); }
-        .face-title { margin: 0; font-size: 18px; font-weight: 800; }
+  /* keep the flip container simple and let faces size naturally */
+  .flip {
+    position: relative;
+    width: 100%;
+    transform-style: preserve-3d;
+    transition: transform 200ms ease;
+    cursor: pointer;
+  }
+  .flip.isBack { /* we still keep a short transform to indicate state if desired */
+    transform: none;
+  }
 
-        .prose :global(p) { margin: 0; }
-        .prose :global(p + p) { margin-top: 8px; }
-        .prose :global(h4) { margin: 4px 0 4px; font-size: 14px; opacity: 0.95; }
-        .prose :global(ul) { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
-        .prose :global(li) { line-height: 1.55; }
-        .prose { font-size: 13.5px; opacity: 0.95; line-height: 1.65; }
+  /* make faces flow naturally (no absolute positioning / no internal scrolling) */
+  .flip-face {
+    position: relative; /* changed from absolute so content flows and expands */
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 18px 16px;
+    backface-visibility: hidden;
+    display: block; /* ensures faces stack in normal flow */
+    gap: 12px;
+  }
 
-        .hint { opacity: 0.7; text-align: right; }
-        @media (max-width: 900px) {
-          .flip-wrap { padding: 12px; }
-          .flip { min-height: 280px; }
-        }
-      `}</style>
+  /* simple show/hide behavior for flip state (keeps toggle but no overlapping required) */
+  .flip-face.back { display: none; }
+  .flip.isBack .flip-face.back { display: block; }
+  .flip.isBack .flip-face:not(.back) { display: none; }
+
+  .face-title { margin: 0; font-size: 18px; font-weight: 800; }
+
+  .prose :global(p) { margin: 0; }
+  .prose :global(p + p) { margin-top: 8px; }
+  .prose :global(h4) { margin: 4px 0 4px; font-size: 14px; opacity: 0.95; }
+  .prose :global(ul) { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+  .prose :global(li) { line-height: 1.55; }
+  .prose { font-size: 13.5px; opacity: 0.95; line-height: 1.65; }
+
+  .hint { opacity: 0.7; text-align: right; }
+
+  @media (max-width: 900px) {
+    .flip-wrap { padding: 12px; }
+  }
+`}</style>
     </section>
   );
 }
