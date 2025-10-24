@@ -322,19 +322,32 @@ async function runSequence() {
           gap: 16px;
           margin-bottom: 18px;
         }
-        .zen-logo {
-          width: 56px;
-          height: 56px;
-          border-radius: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(135deg,#22294a,#1b253b);
-          color: #ffd27f;
-          font-weight: 800;
-          font-size: 16px;
-          box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-        }
+      /* logo container + image sizing */
+.zen-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg,#22294a,#1b253b);
+  color: #ffd27f;
+  font-weight: 800;
+  font-size: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  overflow: hidden; /* ensure img doesn't escape the rounded box */
+}
+
+/* direct image rules — makes the uploaded logo fit and stay crisp */
+.zen-logo-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 8px; /* optional — keeps subtle rounding */
+}
+
         .zen-title { margin: 0; font-size: 20px; font-weight: 700; }
         .zen-sub { color: #9aa7bf; font-size: 13px; }
         .zen-actions { margin-left: auto; }
