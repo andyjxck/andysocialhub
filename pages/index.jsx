@@ -174,7 +174,9 @@ export default function ZenVoidPage() {
       <div className="zen-root">
         <div className="zen-container">
           <header className="zen-header">
-            <div className="zen-logo">ZV</div>
+            <div className="zen-logo">
+  <img src="/images/zenvoid-logo.png" alt="Zen Void Logo" className="zen-logo-img" />
+</div>
             <div>
               <h1 className="zen-title">Zen Void</h1>
               <div className="zen-sub">A short place to breathe, reset and reflect</div>
