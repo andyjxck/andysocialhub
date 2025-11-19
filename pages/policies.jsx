@@ -385,37 +385,86 @@ export default function Policies() {
   return (
     <Layout>
       {/* DOWNLOAD CTA SECTION */}
-      <section className="downloads" aria-labelledby="downloads-title">
-        <h2 id="downloads-title" className="dl-title">Download the Games</h2>
+    {/* DOWNLOAD CTA SECTION */}
+<section className="downloads" aria-labelledby="downloads-title">
+  <h2 id="downloads-title" className="dl-title">Download the Games</h2>
 
-        <div className="dl-grid">
-          <article className="dl-card">
-            <h3 className="dl-name">Game Void</h3>
-            <div className="store-buttons">
-              <a className="store-btn" href={LINKS.GAME_VOID_IOS} target="_blank" rel="noopener noreferrer"> iOS — Get on App Store</a>
-              <button className="store-btn disabled" type="button" disabled>Android — Coming Soon</button>
-            </div>
-          </article>
+  <div className="dl-grid">
+    {/* Tap Tap Three */}
+    <article className="dl-card">
+      <h3 className="dl-name">Tap Tap Three</h3>
+      <div className="store-buttons">
+        <button className="store-btn disabled" type="button" disabled>
+           iOS — Coming Soon
+        </button>
+        <button className="store-btn disabled" type="button" disabled>
+          Android — Coming Soon
+        </button>
+      </div>
+    </article>
 
-          <article className="dl-card">
-            <h3 className="dl-name">Social Void</h3>
-            <div className="store-buttons">
-              <a className="store-btn" href={LINKS.SOCIAL_VOID_IOS} target="_blank" rel="noopener noreferrer"> iOS — Get on App Store</a>
-              <button className="store-btn disabled" type="button" disabled>Android — Coming Soon</button>
-            </div>
-          </article>
+    {/* Game Void */}
+    <article className="dl-card">
+      <h3 className="dl-name">Game Void</h3>
+      <div className="store-buttons">
+        <a
+          className="store-btn"
+          href={LINKS.GAME_VOID_IOS}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+           iOS — Get on App Store
+        </a>
+        <button className="store-btn disabled" type="button" disabled>
+          Android — Coming Soon
+        </button>
+      </div>
+    </article>
 
-          <article className="dl-card">
-            <h3 className="dl-name">Tap Tap Two</h3>
-            <div className="store-buttons">
-              <a className="store-btn" href={LINKS.TTT_SITE} target="_blank" rel="noopener noreferrer">
-                <img src={LINKS.TTT_LOGO} alt="Tap Tap Two logo" style={{ height: 28, width: "auto", marginRight: 8, borderRadius: 6 }} />
-                Visit TapTapTwo.co.uk
-              </a>
-            </div>
-          </article>
-        </div>
-      </section>
+    {/* Social Void */}
+    <article className="dl-card">
+      <h3 className="dl-name">Social Void</h3>
+      <div className="store-buttons">
+        <a
+          className="store-btn"
+          href={LINKS.SOCIAL_VOID_IOS}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+           iOS — Get on App Store
+        </a>
+        <button className="store-btn disabled" type="button" disabled>
+          Android — Coming Soon
+        </button>
+      </div>
+    </article>
+
+    {/* Tap Tap Two */}
+    <article className="dl-card">
+      <h3 className="dl-name">Tap Tap Two</h3>
+      <div className="store-buttons">
+        <a
+          className="store-btn"
+          href={LINKS.TTT_SITE}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src={LINKS.TTT_LOGO}
+            alt="Tap Tap Two logo"
+            style={{
+              height: 28,
+              width: "auto",
+              marginRight: 8,
+              borderRadius: 6,
+            }}
+          />
+          Visit TapTapTwo.co.uk
+        </a>
+      </div>
+    </article>
+  </div>
+</section>
 
       {/* 2×2 GRID ALWAYS */}
       <div className="policies-container">
