@@ -80,6 +80,103 @@ const content = {
     ),
   },
 
+  "tap-tap-three": {
+    subtitle: "Idle tapping, stocks, businesses, and social features",
+    privacy: (
+      <>
+        <p><strong>Last Updated: 29 September 2025</strong></p>
+        <p>
+          Tap Tap Three is owned and operated by <strong>Andrew Blewett</strong>. We only collect
+          what is required to run the game, support online features, and keep your progress safe.
+        </p>
+
+        <h4>Information We Collect</h4>
+        <ul>
+          <li><strong>Account Data</strong> (username, PIN, profile emoji).</li>
+          <li><strong>Gameplay Data</strong> (balance, upgrades, stocks, businesses, stats).</li>
+          <li><strong>Social Data</strong> (friends, chat messages, read receipts).</li>
+          <li><strong>Device ID</strong> for login verification.</li>
+          <li><strong>Crash Logs & Diagnostics</strong> to fix bugs and improve stability.</li>
+        </ul>
+
+        <h4>How We Use Data</h4>
+        <ul>
+          <li>Sync gameplay and save your progress.</li>
+          <li>Support account login and device recovery.</li>
+          <li>Provide social features (friends, messaging, profiles).</li>
+          <li>Fix bugs and improve reliability.</li>
+          <li>Detect cheating or abuse.</li>
+        </ul>
+
+        <h4>Data Sharing</h4>
+        <p>
+          We only share necessary data with Supabase, our backend provider.  
+          No data is sold, and Tap Tap Three does <strong>not contain advertising</strong>.
+        </p>
+
+        <h4>Your Choices</h4>
+        <ul>
+          <li>Delete your account in-app using the built-in deletion feature.</li>
+          <li>Email requests to: <a href="mailto:andyblewett9@gmail.com">andyblewett9@gmail.com</a></li>
+        </ul>
+
+        <h4>Children</h4>
+        <p>Tap Tap Three is intended for players aged 13+.</p>
+
+        <h4>International Users</h4>
+        <p>Data is processed in the UK and where our providers operate.</p>
+      </>
+    ),
+    terms: (
+      <>
+        <p><strong>Last Updated: 29 September 2025</strong></p>
+        <p>
+          These Terms apply to Tap Tap Three (“the App”). By installing or using the App, you agree to
+          these Terms and the Privacy Policy.
+        </p>
+
+        <h4>Eligibility</h4>
+        <p>You must be 13+ to use Tap Tap Three. Under-18s require guardian consent.</p>
+
+        <h4>License</h4>
+        <p>
+          You receive a personal, non-transferable license to use the App.  
+          All rights belong to <strong>Andrew Blewett</strong>.
+        </p>
+
+        <h4>User Conduct</h4>
+        <ul>
+          <li>No cheating, hacking, or exploiting bugs.</li>
+          <li>No abusive usernames, messages, or behaviour.</li>
+          <li>We may remove accounts violating rules.</li>
+        </ul>
+
+        <h4>Virtual Items</h4>
+        <p>
+          In-game currency, upgrades, and stats have no cash value and may be changed at any time.
+        </p>
+
+        <h4>Social Features</h4>
+        <p>
+          Chat and friend interactions must remain safe.  
+          We may moderate or remove content to protect players.
+        </p>
+
+        <h4>Termination</h4>
+        <p>We may suspend or terminate accounts that breach these Terms.</p>
+
+        <h4>Liability</h4>
+        <p>
+          The App is provided “as is.”  
+          No liability for indirect or consequential damages.
+        </p>
+
+        <h4>Governing Law</h4>
+        <p>These Terms are governed by England & Wales law.</p>
+      </>
+    ),
+  },
+
   "game-void": {
     subtitle: "Arcade hub of classic & puzzle games",
     privacy: (
@@ -262,7 +359,12 @@ const content = {
   },
 };
 
-const appsTop = [{ id: "zen-void", title: "Zen Void" }];
+// -------------------- APPS FOR GRID --------------------
+const appsTop = [
+  { id: "zen-void", title: "Zen Void" },
+  { id: "tap-tap-three", title: "Tap Tap Three" },
+];
+
 const appsBottom = [
   { id: "game-void", title: "Game Void" },
   { id: "social-void", title: "Social Void" },
@@ -287,7 +389,6 @@ export default function Policies() {
         <h2 id="downloads-title" className="dl-title">Download the Games</h2>
 
         <div className="dl-grid">
-          {/* Game Void */}
           <article className="dl-card">
             <h3 className="dl-name">Game Void</h3>
             <div className="store-buttons">
@@ -296,7 +397,6 @@ export default function Policies() {
             </div>
           </article>
 
-          {/* Social Void */}
           <article className="dl-card">
             <h3 className="dl-name">Social Void</h3>
             <div className="store-buttons">
@@ -305,7 +405,6 @@ export default function Policies() {
             </div>
           </article>
 
-          {/* Tap Tap Two */}
           <article className="dl-card">
             <h3 className="dl-name">Tap Tap Two</h3>
             <div className="store-buttons">
@@ -318,9 +417,11 @@ export default function Policies() {
         </div>
       </section>
 
-          {/* policies container: top wide card spanning two columns, then two cards side-by-side */}
+      {/* 2×2 GRID ALWAYS */}
       <div className="policies-container">
-        <div className="zen-wide">
+        
+        {/* TOP ROW */}
+        <div className="policies-grid">
           {appsTop.map(({ id, title }) => (
             <PolicyTile
               key={id}
@@ -335,23 +436,22 @@ export default function Policies() {
           ))}
         </div>
 
+        {/* BOTTOM ROW */}
         <div className="policies-grid">
-          {appsBottom.map(({ id, title }) => {
-            const isOpen = openId === id;
-            return (
-              <PolicyTile
-                key={id}
-                appId={id}
-                title={title}
-                subtitle={content[id].subtitle}
-                isOpen={isOpen}
-                onToggle={() => setOpenId(isOpen ? null : id)}
-                privacy={content[id].privacy}
-                terms={content[id].terms}
-              />
-            );
-          })}
+          {appsBottom.map(({ id, title }) => (
+            <PolicyTile
+              key={id}
+              appId={id}
+              title={title}
+              subtitle={content[id].subtitle}
+              isOpen={openId === id}
+              onToggle={() => setOpenId(openId === id ? null : id)}
+              privacy={content[id].privacy}
+              terms={content[id].terms}
+            />
+          ))}
         </div>
+
       </div>
 
       {/* ACCOUNT DELETION */}
@@ -375,6 +475,7 @@ export default function Policies() {
         </ul>
       </section>
 
+      {/* STYLES */}
       <style jsx>{`
         /* Downloads */
         .downloads { margin-bottom: 32px; }
@@ -400,14 +501,14 @@ export default function Policies() {
         .store-btn:hover:not(.disabled) { background: rgba(124,58,237,1); }
         .store-btn.disabled { background: rgba(255,255,255,0.12); cursor: not-allowed; }
 
-        /* Zen-wide */
-        .zen-wide { margin-bottom: 18px; }
-
-        /* Policies grid */
+        /* Policies Grid */
+        .policies-container { margin-top: 20px; display: grid; gap: 20px; }
         .policies-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
-        @media (min-width: 900px) { .policies-grid { grid-template-columns: 1fr 1fr; } }
+        @media (min-width: 900px) { 
+          .policies-grid { grid-template-columns: 1fr 1fr; } 
+        }
 
-        /* Delete */
+        /* Delete Section */
         .delete-section {
           margin-top: 28px; padding: 18px 16px; border-radius: 16px;
           border: 1px solid rgba(255,255,255,0.18); background: rgba(10,10,22,0.28);
@@ -474,92 +575,82 @@ function PolicyTile({ appId, title, subtitle, isOpen, onToggle, privacy, terms }
         )}
       </div>
 
-      {/* Styles (scoped) */}
-    <style jsx>{`
-  .tile {
-    border-radius: 16px; overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.18);
-    background: rgba(10,10,22,0.28);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px rgba(7,7,12,0.15);
-  }
+      {/* Styles */}
+      <style jsx>{`
+        .tile {
+          border-radius: 16px; overflow: hidden;
+          border: 1px solid rgba(255,255,255,0.18);
+          background: rgba(10,10,22,0.28);
+          backdrop-filter: blur(10px);
+          box-shadow: 0 10px 30px rgba(7,7,12,0.15);
+        }
 
-  .tile-head {
-    width: 100%; background: rgba(255,255,255,0.04); border: none;
-    padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    cursor: pointer; font-weight: 700; letter-spacing: 0.2px; border-bottom: 1px solid rgba(255,255,255,0.12);
-    color: inherit; text-align: left;
-  }
-  .tile-head:hover { background: rgba(124,58,237,0.15); }
+        .tile-head {
+          width: 100%; background: rgba(255,255,255,0.04); border: none;
+          padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+          cursor: pointer; font-weight: 700; letter-spacing: 0.2px; border-bottom: 1px solid rgba(255,255,255,0.12);
+          color: inherit; text-align: left;
+        }
+        .tile-head:hover { background: rgba(124,58,237,0.15); }
 
-  .head-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
-  .dot { width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #7c3aed, #4c1d95); box-shadow: 0 0 10px rgba(124,58,237,0.6); flex-shrink: 0; }
-  .tile-title { font-weight: 800; }
-  .tile-sub { opacity: 0.85; }
-  .chev { opacity: 0.9; font-size: 13px; }
+        .head-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #7c3aed, #4c1d95); box-shadow: 0 0 10px rgba(124,58,237,0.6); flex-shrink: 0; }
+        .tile-title { font-weight: 800; }
+        .tile-sub { opacity: 0.85; }
+        .chev { opacity: 0.9; font-size: 13px; }
 
-  /* allow the body to expand with the content (page scrolls) */
-  .tile-body {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transform: translateY(-4px);
-    transition: max-height 260ms ease, opacity 180ms ease, transform 180ms ease;
-  }
-  .tile-body.open {
-    max-height: 2000px; /* large enough to fit content */
-    opacity: 1;
-    transform: translateY(0);
-  }
+        .tile-body {
+          max-height: 0;
+          opacity: 0;
+          overflow: hidden;
+          transform: translateY(-4px);
+          transition: max-height 260ms ease, opacity 180ms ease, transform 180ms ease;
+        }
+        .tile-body.open {
+          max-height: 3000px;
+          opacity: 1;
+          transform: translateY(0);
+        }
 
-  .flip-wrap { padding: 14px; perspective: 1200px; }
+        .flip-wrap { padding: 14px; perspective: 1200px; }
 
-  /* keep the flip container simple and let faces size naturally */
-  .flip {
-    position: relative;
-    width: 100%;
-    transform-style: preserve-3d;
-    transition: transform 200ms ease;
-    cursor: pointer;
-  }
-  .flip.isBack { /* we still keep a short transform to indicate state if desired */
-    transform: none;
-  }
+        .flip {
+          position: relative;
+          width: 100%;
+          transform-style: preserve-3d;
+          transition: transform 200ms ease;
+          cursor: pointer;
+        }
+        .flip.isBack { transform: none; }
 
-  /* make faces flow naturally (no absolute positioning / no internal scrolling) */
-  .flip-face {
-    position: relative; /* changed from absolute so content flows and expands */
-    width: 100%;
-    box-sizing: border-box;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.15);
-    padding: 18px 16px;
-    backface-visibility: hidden;
-    display: block; /* ensures faces stack in normal flow */
-    gap: 12px;
-  }
+        .flip-face {
+          position: relative;
+          width: 100%;
+          box-sizing: border-box;
+          border-radius: 12px;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.15);
+          padding: 18px 16px;
+          backface-visibility: hidden;
+          display: block;
+          gap: 12px;
+        }
 
-  /* simple show/hide behavior for flip state (keeps toggle but no overlapping required) */
-  .flip-face.back { display: none; }
-  .flip.isBack .flip-face.back { display: block; }
-  .flip.isBack .flip-face:not(.back) { display: none; }
+        .flip-face.back { display: none; }
+        .flip.isBack .flip-face.back { display: block; }
+        .flip.isBack .flip-face:not(.back) { display: none; }
 
-  .face-title { margin: 0; font-size: 18px; font-weight: 800; }
+        .face-title { margin: 0; font-size: 18px; font-weight: 800; }
 
-  .prose :global(p) { margin: 0; }
-  .prose :global(p + p) { margin-top: 8px; }
-  .prose :global(h4) { margin: 4px 0 4px; font-size: 14px; opacity: 0.95; }
-  .prose :global(ul) { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
-  .prose :global(li) { line-height: 1.55; }
-  .prose { font-size: 13.5px; opacity: 0.95; line-height: 1.65; }
+        .prose :global(p) { margin: 0; }
+        .prose :global(p + p) { margin-top: 8px; }
+        .prose :global(h4) { margin: 4px 0 4px; font-size: 14px; opacity: 0.95; }
+        .prose :global(ul) { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+        .prose :global(li) { line-height: 1.55; }
+        .prose { font-size: 13.5px; opacity: 0.95; line-height: 1.65; }
 
-  .hint { opacity: 0.7; text-align: right; }
-
-  @media (max-width: 900px) {
-    .flip-wrap { padding: 12px; }
-  }
-`}</style>
+        .hint { opacity: 0.7; text-align: right; }
+      `}</style>
     </section>
   );
 }
