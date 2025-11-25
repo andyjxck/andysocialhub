@@ -7,49 +7,86 @@ const content = {
   "zen-void": {
     subtitle: "Mood, journaling, and reflection app",
     privacy: (
-      <>
-        <p><strong>Last Updated: 23 October 2025</strong></p>
-        <p>
-          Zen Void is owned and operated by <strong>Andrew Blewett</strong>. We collect only what’s
-          necessary to provide a calm, personalized journaling and mood experience, and to support
-          core functionality and ads.
-        </p>
+  <>
+    <p><strong>Last Updated: 26 November 2025</strong></p>
 
-        <h4>Information We Collect</h4>
-        <ul>
-          <li><strong>Advertising Identifiers</strong> (IDFA/AAID) for displaying and measuring ads via Google AdMob.</li>
-          <li><strong>App Usage Data</strong> such as mood entries, reflections, feature interactions, and analytics.</li>
-          <li><strong>Crash & Performance Data</strong> to help fix bugs and improve reliability.</li>
-          <li><strong>Optional Journal Entries</strong> and moods stored securely in Supabase and linked only to your account.</li>
-        </ul>
+    <p>
+      Zen Void is owned and operated by <strong>Andrew Blewett</strong>.  
+      This app helps you track mood, energy, and personal reflection, and includes an optional AI-powered companion (“Zeno”) to provide gentle, personalized conversation.
+    </p>
 
-        <h4>How We Use Data</h4>
-        <ul>
-          <li>Serve and measure ads through Google AdMob.</li>
-          <li>Analyze usage to improve your journaling experience.</li>
-          <li>Store and sync your reflections safely in the cloud.</li>
-          <li>Maintain stability and optimize performance.</li>
-        </ul>
+    <h4>Information We Collect</h4>
+    <ul>
+      <li>
+        <strong>Mood & Wellbeing Inputs</strong>  
+        (mood rating, energy, sleep hours, stress, social energy, productivity, activity, creativity).  
+        These are stored securely in Supabase and linked to your account.
+      </li>
 
-        <h4>Sharing & Retention</h4>
-        <p>
-          Shared only with Supabase (for storage) and Google AdMob (for ads). Data is never sold or used
-          for unrelated tracking. Journal data is deleted on account deletion or upon your request.
-        </p>
+      <li>
+        <strong>AI Conversation Data</strong>  
+        Messages you send to the Zeno companion are processed securely through OpenAI solely for generating responses.  
+        <em>Zeno never sees encrypted content such as Notes or Gratitude.</em>
+      </li>
 
-        <h4>Your Choices</h4>
-        <ul>
-          <li>Manage ad preferences or reset your advertising ID in device settings.</li>
-          <li>Request data deletion or export: <a href="mailto:andyblewett9@gmail.com">andyblewett9@gmail.com</a>.</li>
-        </ul>
+      <li>
+        <strong>Account Information</strong>  
+        (username, optional profile emoji).
+      </li>
 
-        <h4>Children</h4>
-        <p>Zen Void is intended for users 13+ and not for children under 13.</p>
+      <li>
+        <strong>Analytics</strong>  
+        Basic usage events to improve features and understand app performance.
+      </li>
 
-        <h4>International Users & Changes</h4>
-        <p>Data is processed in the UK. We may update this policy; continued use means acceptance.</p>
-      </>
-    ),
+      <li>
+        <strong>Diagnostics</strong>  
+        Crash logs and performance data used to fix bugs and improve stability.
+      </li>
+    </ul>
+
+    <h4>How Your Data Is Used</h4>
+    <ul>
+      <li>To store and sync your mood entries across devices.</li>
+      <li>To generate optional personalized responses from Zeno.</li>
+      <li>To improve and refine features based on usage analytics.</li>
+      <li>To maintain stability, security, and app functionality.</li>
+    </ul>
+
+    <h4>Sharing</h4>
+    <p>
+      Your data is <strong>never sold</strong>.  
+      It is shared only with trusted service providers:
+    </p>
+    <ul>
+      <li><strong>Supabase</strong> — secure storage and account services.</li>
+      <li><strong>OpenAI</strong> — to generate optional AI responses; messages are not used to train models.</li>
+    </ul>
+
+    <h4>Encryption & Sensitive Data</h4>
+    <p>
+      Personal journal text (Notes, Gratitude) is <strong>end-to-end encrypted</strong> on your device and is never visible to Zeno or used in personalization.
+    </p>
+
+    <h4>Your Choices</h4>
+    <ul>
+      <li>Delete all journal and account data at any time by emailing <a href="mailto:andyblewett9@gmail.com">andyblewett9@gmail.com</a>.</li>
+      <li>Disable or ignore the AI companion — Zeno is fully optional.</li>
+    </ul>
+
+    <h4>Children</h4>
+    <p>Zen Void is intended for users aged 13+.</p>
+
+    <h4>International Use</h4>
+    <p>Your data is processed in the UK and where our providers operate.</p>
+
+    <h4>Changes</h4>
+    <p>
+      We may update this policy. Continued use after updates means acceptance of the revised terms.
+    </p>
+  </>
+),
+
     terms: (
       <>
         <p><strong>Last Updated: 23 October 2025</strong></p>
