@@ -8,12 +8,18 @@ export default function TownWall() {
   return (
     <Layout>
       {/* HERO */}
-      <section className="hero">
-        <h1 className="title">Town Wall</h1>
-        <p className="subtitle">
-          A community platform built around real towns, zones, and shared spaces.
-        </p>
-      </section>
+   <section className="hero">
+  <img
+    src="https://ucarecdn.com/d8da2fdb-f7f4-4dcd-94fe-531c7a08fd51/-/format/auto/"
+    alt="Town Wall logo"
+    className="townwall-logo"
+  />
+  <h1 className="title">Town Wall</h1>
+  <p className="subtitle">
+    A community platform built around real towns, zones, and shared spaces.
+  </p>
+</section>
+
 
       {/* ABOUT */}
       <section className="card">
